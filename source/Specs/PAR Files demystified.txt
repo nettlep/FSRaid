@@ -1,0 +1,297 @@
+-----------------------------------------------------------------------
+AUTHOR'S NOTE:
+-----------------------------------------------------------------------
+
+One of my non-programming buddies (yes, we programmers need real
+friends, too :) asked how PAR files work. He wasn't asking how to use
+the tool, he was asking how it was possible for one PAR file to be
+capable of replacing _any_ file within the RAR set. Hence, this
+explanation was born.
+
+You do not need to know much in order to understand this document --
+any 6th grader should be able to understand it.
+
+Also, this document requires that you view it with a fixed-width font.
+So if some of the tables below aren't properly spaced out, or if they
+appear mis-aligned, try using notepad to view this document.
+
+I'm also considering creating a new PAR tool, one that encompases the
+existing functionality of the existing tools, but then expands on that
+functionality. In order to do this, I'll probably have to create a new
+file format (but don't worry, the tool will still understand the old
+PAR file format.) Advantages of this new tool may include faster repair
+times (yes, even faster than SmartPar) as well as smaller PAR files.
+Also, the existing PAR file system is inherently limited to 256 total
+files (rar + par) -- the new tool will increase this limitation to
+65536 files.
+
+If you have ideas/comments about the new tool, feel free to send them
+along to me. If I don't like your ideas, at least I'll have fun making
+donkey faces as I read them. :)
+
+- Paul "MidNight" Nettle
+  http://www.FluidStudios.com/
+  my_nickname_goes_here@fluidstudios.com
+
+  Author of 3D Mail Effects (www.3DMailEffects.com)
+
+-----------------------------------------------------------------------
+PAR files demystified...
+-----------------------------------------------------------------------
+
+This will ALMOST explain how PAR files work (i.e. how they figure out how
+to replace missing files.) I use the term "almost" on purpose. PAR files
+use a scheme called "Reed-Soloman" coding. I'm not going to explain that,
+since it requires a lot of algebra. Instead, I'm going to explain a very
+similar technique, called "n+1-parity" - the same technique used in RAID 5
+drive setups.
+
+The only differnce between Reed-Soloman and "n+1-parity" is that
+"n+1-parity" can only handle if one file goes bad. Reed-Soloman is an
+extension of the "n+1-parity" technique, and allows for multiple failures
+(one failure per extra PAR file.) In reality, this stuff all comes from
+hard drive failure recovery, so each RAR file is equivalent to a physical
+drive in a RAID system and each PAR file is the same as an extra physical
+drive ("parity drive") in a RAID system.
+
+To understand this, you need to be familiar with the binary number system
+and the properties of the XOR operation. You can actually get away with
+not understanding binary numbers, but heck, I'll explain it anyway since
+it's good to know...
+
+Just remember, that it may seem like this has nothing to do with PAR
+files, but it has EVERYTHING to do with them! :)
+
+We normally deal with the "base 10" (decimal)  system. See if you can see
+the pattern below:
+
+  1  10  100  1,000  10,000  100,000  1,000,000 ...
+
+We start at 1, multiply by 10, then multiply by 10 again, etc. This
+multiplication by "10" is because we're using the base-10 system. What
+happens if you add up all the numbers:
+
+  1 + 10 + 100 + 1,000 + 10,000, + 100,000 + 1,000,000 = 1,111,111
+
+Did you notice the result (1,111,111) -- boy, that almost looks like a
+binary number. It's not, so don't let that confuse you. But I wanted to
+point out an important similarity... Each time you multiply by 10, you
+move the decimal point over (yeah, everybody knows this, but I wanted to
+bring it to the front of your mind.) The same thing happens with binary.
+
+THESE are binary numbers:
+
+  1 + 10 + 100 + 1000 + 10000 + 100000 + 1000000 = 1111111
+
+However, that binary value "1111111" isn't what you think it is. If we
+convert that number to decimal, it ends up only being 127.
+
+So, let's look at how binary numbers are built. If we build our number
+pattern for binary we would multiply each successive number by 2, rather
+than by 10 because binary is base 2. Here's what that pattern looks like:
+
+  1  2  4  8  16  32  64  ...
+
+Let's look at both of those number patterns side-by-side:
+
+  1  10  100  1000  10000  100000  1000000
+  1  2   4    8     16     32      64
+
+The top row represents the number in binary, the bottom row represents the
+same number in decimal. Therefore, "32" is the decimal equivalent to
+"100000".
+
+By now, you're probably thinking "yeah, I get it, but it's still kinda
+fuzzy in my head." No sweat, let's talk about converting a decimal number
+to a binary number. We're going to write this stuff down backwards
+(right-to-left) because it's easier to see that way:
+
+ 128   64  32  16  8   4   2   1
+ ---  --- --- --- --- --- --- ---
+  1    1   0   0   1   1   1   1
+
+You'll notice our binary number system across the top (written in
+decimal), and a binary number written below. If you pull out all the extra
+spaces, that binary number looks like "11001111". To convert the number to
+decimal, you just add up all the values with a "1" below them. In this
+case, there's a zero below "32" and "16" so we'll skip those and add up
+all the rest:
+
+  128 + 64 + 8 + 4 + 2 + 1 = 207
+
+So, the binary number "11001111" is equivalent to the decimal number
+"207".
+
+That's all there is to it. If you're finding it a bit uncomfortable for
+your brain to wrap around the "binary" system, don't sweat it. For the
+rest of this explanation, you don't actually need to fully understand
+binary numbers... just know what they look like, because we're going to be
+dealing with them a lot. If I tried to explain this with decimal numbers,
+you would find it MUCH harder to understand.
+
+Next on the agenda, we need to know what an XOR operation is and what it
+does.
+
+XOR is short for "exclusive or". The "or" in that term means just what it
+sounds like... "this OR that", "you shoot him OR I shoot you." In English,
+the phrease "exclusive or" means "one OR the other, but not both".
+
+  0 XOR 0 = 0
+  0 XOR 1 = 1
+  1 XOR 0 = 1
+  1 XOR 1 = 0
+
+Looking at the table above, you'll note that the only entries that "= 1"
+are those entries where the two values are different. When we're dealing
+with just 1's and 0's, then there are only four possibilities, shown
+above. If both values are the same ("1 XOR 1" and "0 XOR 0") then the
+result is going to be zero, because you can only have one or the other,
+but not both. The other two possibilities are those that are "exclusive
+or" scenarios ("1 XOR 0" and "0 XOR 1").
+
+Let's do this to an 8-bit binary value (8-bits, by the way, being "8
+binary digits," since each binary digit is one bit.)
+
+  10011101 (first value)
+  11001011 (second value)
+  --------
+  01010110 (XOR result)
+
+This is not addition, this is "exclusive or" -- don't forget that. :) Look
+at the top two rows of bits. Then just follow the columns vertically.. the
+first column has a "1" and a "1" in it. XOR rules says that must be a
+zero. The next column as a "0" and a "1", since this is a proper exclusive
+or, we set the resulting bit to "1". Keep going for all 8 bits, and you'll
+have your result.
+
+Binary values and the XOR operation are the crux behind coding schemes
+like PAR files. Like I mentioned before, we're going to cover the
+n+1-parity scheme here. In essense, this is the same thing as PAR files,
+but with only ONE par file (you can't have a P02 or P03 ... )
+
+Remember, this stuff was originally innovated for RAID disk drive systems,
+not PAR files. But to avoid confusion (after all, this is intended to
+explain PAR files, not RAID arrays), I'll use the PAR file as the data
+source instead of a drive.
+
+Say we have three RAR files and only one PAR data file (P01). RAR files
+are just binary files, with a lot of bytes. Here are the first four bytes
+of the four par files:
+
+  rar: 11010100 11101001 00111010 01001110 ...
+  r01: 00010110 01001010 01010101 10001010 ...
+  r02: 11010100 00010101 10101101 00101101 ...
+  r03: 01000110 01010011 10110010 01010101 ...
+
+Creating our PAR data file is very simple. Okay, in relity, we're not
+creating a PAR file (it has a specific format with more information in it
+than just the raw data, and it also uses a more advanced scheme... but for
+the moment, we'll assume the simplest case for the sake of explanation.)
+Also, PAR files usually have multiple files (P01, P02, etc.) but I'll just
+refer to the file as PAR for the sake of simplicity.
+
+To create the PAR data file, we'll just do a bunch of XORs. We'll XOR all
+the first bytes of all the RAR files. So, the first byte of the PAR file
+is the result of XORing the first bytes of all the RAR files. The second
+byte of the PAR file is the result of XORing the second bytes of all the
+RAR files, and so on.
+
+The XOR operation only has two operands (two numbers). But with four RAR
+files, how do we get an XOR? We simply XOR the first two and then take
+that result and XOR it with the third, then take that result and XOR it
+with the fourth. It goes a little sumthin' like dis:
+
+  rar: 11010100 11101001 00111010 01001110 ...
+  r01: 00010110 01001010 01010101 10001010 ...
+
+  int: 11000010 10100011 01101111 11000100 ...
+  r02: 11010100 00010101 10101101 00101101 ...
+
+  int: 00010110 10110110 11000010 11101001 ...
+  r03: 01000110 01010011 10110010 01010101 ...
+
+  PAR: 01010000 11100101 01110000 10111100 ...
+
+Just so we're clear, the table above is grouped in two's. The first group
+is rar and r01. The next group is the intermediate values (result from
+calculating the XOR between rar/r01) which is then XOR'd with r02. This
+gives us another intermediate value, which is then XOR'd with r03. The
+result of that last XOR operation is the PAR file. I only present this for
+those that want to follow along with the actual bit manipulations in
+detail. Let's show that table again, without the intermediat values:
+
+  rar: 11010100 11101001 00111010 01001110 ...
+  r01: 00010110 01001010 01010101 10001010 ...
+  r02: 11010100 00010101 10101101 00101101 ...
+  r03: 01000110 01010011 10110010 01010101 ...
+
+  PAR: 01010000 11100101 01110000 10111100 ...
+
+So, what good does all this crap do us? Well, the answer to that lies in
+one of the cool properties of the XOR operation.
+
+You see, the XOR operation can go both ways (and that doesn't mean that it
+is a sexual deviant. :) In other words, it's communtative, just like
+addition. Just like can add the numbers in any order and get the same
+result, you can also XOR the numbers in any order to get the same result.
+
+So let's take a look at the following numbers, and I'll point out
+something that will help you understand how PAR files can restore lost
+data. The following is not a binary number, but just a string of bits,
+with the XOR result of those bits at the end:
+
+  1 1 0 0 1 0 0 1 0 0 0 1 1 1 0 0 1 0 1 0 1 0 0 1 0 1 0 1 0 1 1 = 1
+
+Let's rearrange those numbers so that the 1's are all at the beginning and
+the 0's are all at the end:
+
+  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 = 1
+
+If you think about it hard enough (otherwise, you'll just have to trust me
+on this one) -- that since order doesn't matter, all that does matter is
+the counts; how many 1's and 0's there are. And in reality, you can
+calculate the result of an XOR of a string of binary digits, by just
+counting the bits that are set to 1. If the count is odd, the XOR result
+is '1' and if the count is even, the XOR result is '0'. In the string of
+digits above, you can count the 1's and see that there are 15 of them,
+which is an odd number, which results in an XOR of 1. And boy, that sure
+is a lot faster, but more importantly, it really helps us figure out how
+to repair missing files. Let's bring back our RAR/PAR table:
+
+  rar: 11010100 11101001 00111010 01001110 ...
+  r01: 00010110 01001010 01010101 10001010 ...
+  r02: 11010100 00010101 10101101 00101101 ...
+  r03: 01000110 01010011 10110010 01010101 ...
+
+  PAR: 01010000 11100101 01110000 10111100 ...
+
+What happens if we delete a rar file? Well, we can just recreate the rar
+file just like we created the PAR file. For example, let's erase just the
+first bit from r02:
+
+  rar: 11010100 11101001 00111010 01001110 ...
+  r01: 00010110 01001010 01010101 10001010 ...
+  r02:  1010100 00010101 10101101 00101101 ...
+  r03: 01000110 01010011 10110010 01010101 ...
+
+  PAR: 01010000 11100101 01110000 10111100 ...
+
+Our PAR says that the result from the first bits of all the rar files is
+zero, which means there must be an EVEN number of 1-bits in the RARs. If
+we look at the first bits of all the RARs, we see "1 0 ? 0" -- there is
+only one 1-bit in there, which means we're missing a 1-bit. We now know
+what should be there. When a RAR file is damaged or missing, we can just
+do that for every bit in the entire file. Doing this, we can recover an
+entire RAR file, and it doesn't matter which file it is.
+
+This technique, "n+1-parity", is limiting in that it can only recover a
+single file and only requires one extra file. PAR files use a technique
+similar to this ("Reed-Soloman Coding") which is really an extension to
+this basic principle. It also makes heavy use of XOR operations, but also
+includes a few matrices in order to allow us to use multiple par files to
+recover multiple RAR files.
+
+So although this doesn't completely explain the PAR system, it should give
+you a good idea of the basis behind how it works. It's absolutely
+trustworthy, because the math it's based on is stable and never tries to
+"guess" at the result.

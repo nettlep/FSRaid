@@ -1,0 +1,744 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0071)http://sourceforge.net/docman/display_doc.php?docid=7273&group_id=30568 -->
+<!-- Server: sf-web1 --><HTML lang=en><HEAD><TITLE>SourceForge: Parity Volume Set specification 1.0</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<SCRIPT language=JavaScript>
+	<!--
+	function help_window(helpurl) {
+		HelpWin = window.open( 'http://sourceforge.net' + helpurl,'HelpWindow','scrollbars=yes,resizable=yes,toolbar=no,height=400,width=400');
+	}
+	// -->
+	</SCRIPT>
+<LINK href="/images/favicon.ico" rel="SHORTCUT ICON">
+<STYLE type=text/css>OL {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+UL {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+P {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+BODY {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+TD {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+TR {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+TH {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+FORM {
+	FONT-SIZE: x-small; COLOR: #333333; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+H1 {
+	FONT-SIZE: x-large; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+H2 {
+	FONT-SIZE: large; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+H3 {
+	FONT-SIZE: medium; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+H4 {
+	FONT-SIZE: small; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+H5 {
+	FONT-SIZE: x-small; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+H6 {
+	FONT-SIZE: xx-small; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+PRE {
+	FONT-FAMILY: courier,sans-serif
+}
+TT {
+	FONT-FAMILY: courier,sans-serif
+}
+SPAN.center {
+	TEXT-ALIGN: center
+}
+SPAN.boxspace {
+	FONT-SIZE: 2pt
+}
+SPAN.osdn {
+	FONT-SIZE: xx-small; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+SPAN.search {
+	FONT-SIZE: xx-small; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+SPAN.slogan {
+	FONT-WEIGHT: bold; FONT-SIZE: large; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+SPAN.footer {
+	FONT-SIZE: xx-small; FONT-FAMILY: verdana,arial,helvetica,sans-serif
+}
+A.maintitlebar {
+	COLOR: #ffffff
+}
+A.maintitlebar:visited {
+	COLOR: #ffffff
+}
+A.sortbutton {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+A.sortbutton:visited {
+	COLOR: #ffffff; TEXT-DECORATION: underline
+}
+.menus {
+	COLOR: #6666aa; TEXT-DECORATION: none
+}
+.menus:visited {
+	COLOR: #6666aa; TEXT-DECORATION: none
+}
+A:link {
+	TEXT-DECORATION: none
+}
+A:visited {
+	TEXT-DECORATION: none
+}
+A:active {
+	TEXT-DECORATION: none
+}
+A:hover {
+	COLOR: #ff0000; TEXT-DECORATION: underline
+}
+.tabs {
+	COLOR: #000000
+}
+.tabs:visited {
+	COLOR: #000000
+}
+.tabs:hover {
+	COLOR: #ff0000
+}
+.tabselect {
+	FONT-WEIGHT: bold; COLOR: #000000
+}
+.tabselect:visited {
+	FONT-WEIGHT: bold
+}
+.tabselect:hover {
+	FONT-WEIGHT: bold; COLOR: #ff0000
+}
+.titlebar {
+	FONT-WEIGHT: bold; FONT-SIZE: x-small; COLOR: #000000; FONT-FAMILY: Helvetica,verdana,arial,helvetica,sans-serif; TEXT-DECORATION: none
+}
+.develtitle {
+	FONT-WEIGHT: bold; COLOR: #000000
+}
+.legallink {
+	FONT-WEIGHT: bold; COLOR: #000000
+}
+.osdn-search {
+	BORDER-RIGHT: #666666 1px solid; BORDER-TOP: #666666 1px solid; FONT-SIZE: 10px; MARGIN: 0px; BORDER-LEFT: #666666 1px solid; COLOR: #666666; BORDER-BOTTOM: #666666 1px solid; FONT-FAMILY: arial,sans-serif; BACKGROUND-COLOR: #fff
+}
+UNKNOWN {
+	PADDING-RIGHT: 0.2em; PADDING-LEFT: 0.2em; PADDING-TOP: 0.1em
+}
+.osdn-button {
+	MARGIN-TOP: 1px; MARGIN-BOTTOM: 1px
+}
+SELECT.osdn-search {
+	TEXT-ALIGN: center
+}
+.osdn-navtext {
+	FONT-SIZE: 10px; COLOR: #666666; FONT-FAMILY: verdana, arial, sans-serif; TEXT-DECORATION: none
+}
+.osdn-foottext {
+	FONT-SIZE: 12px; COLOR: #cccccc; FONT-FAMILY: verdana, arial, sans-serif; TEXT-ALIGN: center; TEXT-DECORATION: none
+}
+</STYLE>
+
+<META content="MSHTML 6.00.2600.0" name=GENERATOR></HEAD>
+<BODY text=#333333 bottomMargin=0 vLink=#6666aa aLink=#aa6666 link=#6666aa 
+bgColor=#6c7198 leftMargin=0 topMargin=0 rightMargin=0 marginheight="0" 
+marginwidth="0"><!--
+
+OSDN navbar
+
+-->
+<TABLE cellSpacing=0 cellPadding=0 width="100%" bgColor=#ffffff border=0>
+  <FORM action=http://www.osdn.com/osdnsearch.pl method=post>
+  <TBODY>
+  <TR bgColor=#999999>
+    <TD colSpan=5><IMG height=1 alt="" src="parfiles_files/blank.gif" 
+    width=1></TD></TR>
+  <TR bgColor=#eeeeee>
+    <TD class=osdn-navtext noWrap>&nbsp;&nbsp;<A class=osdn-navtext 
+      title="click to visit OSDN.com!" 
+      href="http://www.osdn.com/"><B>OSDN:</B>&nbsp;Open&nbsp;Source&nbsp;Development&nbsp;Network</A>:&nbsp;<A 
+      href="http://www.osdn.com/newsletters/">Newsletters</A> - <A 
+      href="http://jobs.osdn.com/">Jobs</A>&nbsp;</TD>
+    <TD class=osdn-navtext vAlign=center align=right 
+      width="100%"><B>SEARCH:</B>&nbsp; </TD>
+    <TD class=osdn-navtext vAlign=center noWrap align=right><SELECT 
+      class=osdn-search name=site> <OPTION value=all selected>All OSDN 
+        Sites</OPTION> <OPTION value="">-----------</OPTION> <OPTION 
+        value=Freshmeat>freshmeat</OPTION> <OPTION 
+        value=Jobs.OSDN.com>Jobs.OSDN.com</OPTION> <OPTION 
+        value=Kuro5hin>Kuro5hin</OPTION> <OPTION 
+        value=LinuxGram>LinuxGram</OPTION> <OPTION 
+        value=NewsForge>NewsForge</OPTION> <OPTION value=OSDN>OSDN.com</OPTION> 
+        <OPTION value=Slashcode>Slashcode</OPTION> <OPTION 
+        value=Slashdot>Slashdot</OPTION> <OPTION 
+        value=SourceForge>SourceForge.net</OPTION></SELECT> <INPUT 
+      class=osdn-search size=12 name=query>&nbsp; </TD>
+    <TD noWrap width=40><INPUT class=osdn-button type=image height=20 alt=Go 
+      width=30 src="parfiles_files/osdn_nav_go.gif" align=middle value=GO 
+      border=0 name=Submit></TD></TR>
+  <TR bgColor=#999999>
+    <TD colSpan=5><IMG height=1 alt="" src="parfiles_files/blank.gif" 
+    width=1></TD></TR></FORM></TBODY></TABLE>
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR>
+    <TD align=left width="70%" background=parfiles_files/steel3.jpg 
+    bgColor=#d5d7d9><A href="http://sourceforge.net/"><IMG height=60 
+      src="parfiles_files/sf_logo_metal2.jpg" width=210 border=0></A></TD>
+    <TD width="30%" background=parfiles_files/steel3.jpg 
+      bgColor=#d5d7d9><IFRAME border=0 marginWidth=0 marginHeight=0 
+      src="parfiles_files/1.htm" frameBorder=no width=468 scrolling=no 
+      height=60><A HREF="http://sfads.osdn.com/cgi-bin/ad_default.pl?click"><IMG SRC="http://sfads.osdn.com/cgi-bin/ad_default.pl?display" border=0 height="60" width="468"></A>
+      </IFRAME></TD>
+    <TD width=20 background=parfiles_files/steel3.jpg bgColor=#d5d7d9><IMG 
+      height=1 alt="" src="parfiles_files/blank.gif" 
+width=20></TD></TR></TBODY></TABLE><!--
+
+
+End OSDN NavBar
+
+
+--><IMG height=5 
+alt="" src="parfiles_files/blank.gif" width=100><BR><!-- start page body -->
+<DIV align=center>
+<TABLE cellSpacing=0 cellPadding=0 width="99%" border=0>
+  <TBODY>
+  <TR>
+    <TD width="1%" background=parfiles_files/tbar1.png height=17><IMG 
+      height=17 src="parfiles_files/tleft1.png" width=17 border=0></TD>
+    <TD align=middle width="99%" background=parfiles_files/tbar1.png 
+      colSpan=3><IMG height=17 src="parfiles_files/tbar1.png" width=1 
+    border=0></TD>
+    <TD><IMG height=17 src="parfiles_files/tright1.png" width=17 
+  border=0></TD></TR>
+  <TR>
+    <TD vAlign=bottom align=left width=17 
+      background=parfiles_files/leftbar1.png><IMG height=25 
+      src="parfiles_files/leftbar1.png" width=17 border=0></TD>
+    <TD bgColor=#ffffff colSpan=3><!-- start main body cell -->
+      <TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+        <TBODY>
+        <TR>
+          <TD vAlign=top align=left width=141 
+          background="C:\Documents and Settings\Paul Nettle\Desktop\parfiles_files\steel3(1).jpg" 
+          bgColor=#cfd1d4><!-- VA Linux Stats Counter --><IMG height=1 
+            alt=Counter src="parfiles_files/clear.gif" width=140><BR>
+            <P><!-- menus -->
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>Status:</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right>
+                  <H4><FONT color=#990000>NOT LOGGED IN</H4><A class=menus 
+                  href="http://sourceforge.net/account/login.php">Login via 
+                  SSL</A> &nbsp;<IMG height=7 src="parfiles_files/point1.png" 
+                  width=7 border=0><BR><A class=menus 
+                  href="http://sourceforge.net/account/register.php">New User 
+                  via SSL</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 
+                  border=0><BR><BR></FONT></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>Search</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right>
+                  <CENTER><FONT size=1>
+                  <FORM action=/search/ method=post target=_blank><SELECT 
+                  name=type_of_search> <OPTION value=soft 
+                    selected>Software/Group</OPTION> <OPTION 
+                    value=people>People</OPTION> <OPTION 
+                    value=freshmeat>Freshmeat.net</OPTION></SELECT><BR><INPUT 
+                  type=checkbox CHECKED value=1 name=exact> Require All 
+                  Words<BR><INPUT type=hidden value=30568 name=group_id> <INPUT 
+                  size=12 name=words><BR><INPUT type=submit value=Search name=Search></FORM></FONT><BR></CENTER></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>Project: 
+parchive</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right><A class=menus 
+                  href="http://sourceforge.net/projects/parchive/">Project 
+                  Summary</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR>
+                  <P><A class=menus 
+                  href="http://sourceforge.net/project/admin/?group_id=30568">Project 
+                  Admin</A> &nbsp;<IMG height=7 src="parfiles_files/point1.png" 
+                  width=7 border=0><BR><BR></P></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>Software</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right><A class=menus 
+                  href="http://sourceforge.net/softwaremap/">Software Map</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/new/">New Releases</A> &nbsp;<IMG 
+                  height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/docman/display_doc.php?docid=6041&amp;group_id=1">Other 
+                  Site Mirrors</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR><A 
+                  class=menus href="http://sourceforge.net/snippet/">Code 
+                  Snippet Library</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 
+              border=0><BR><BR></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>SourceForge.net</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right><A class=menus 
+                  href="http://sourceforge.net/docman/?group_id=1"><B>Site 
+                  Docs</B></A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR><A 
+                  class=menus 
+                  href="http://sourceforge.net/docman/display_doc.php?docid=7438&amp;group_id=1">Work 
+                  for Sourceforge!</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR><A 
+                  class=menus 
+                  href="http://sourceforge.net/forum/?group_id=1">Discussion 
+                  Forums</A> &nbsp;<IMG height=7 src="parfiles_files/point1.png" 
+                  width=7 border=0><BR><A class=menus 
+                  href="http://sourceforge.net/people/">Project Help Wanted</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/top/">Top Projects</A> &nbsp;<IMG 
+                  height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/docman/display_doc.php?docid=2352&amp;group_id=1">Site 
+                  Status</A> &nbsp;<IMG height=7 src="parfiles_files/point1.png" 
+                  width=7 border=0><BR><A class=menus 
+                  href="http://sourceforge.net/docman/display_doc.php?docid=7632&amp;group_id=1">Contact 
+                  Support</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR>
+                  <P><A class=menus 
+                  href="http://sourceforge.net/docman/display_doc.php?docid=762&amp;group_id=1">Compile 
+                  Farm</A> &nbsp;<IMG height=7 src="parfiles_files/point1.png" 
+                  width=7 border=0><BR><BR></P></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>SourceForge.net 
+                  Foundries</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right><A class=menus 
+                  href="http://sourceforge.net/docman/display_doc.php?docid=6029&amp;group_id=1">About 
+                  Foundries</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR>
+                  <P><A class=menus 
+                  href="http://foundries.sourceforge.net/clusters/">Clustering</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://foundries.sourceforge.net/distributed/">Distributed 
+                  Computing</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR><A 
+                  class=menus 
+                  href="http://foundries.sourceforge.net/large/">Linux on Large 
+                  Systems</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR><A 
+                  class=menus 
+                  href="http://sourceforge.net/foundry/linuxkernel/">Linux 
+                  Kernel</A> &nbsp;<IMG height=7 src="parfiles_files/point1.png" 
+                  width=7 border=0><BR><A class=menus 
+                  href="http://sourceforge.net/foundry/linuxdrivers/">Linux 
+                  Drivers</A> &nbsp;<IMG height=7 
+                  src="parfiles_files/point1.png" width=7 border=0><BR><A 
+                  class=menus href="http://sourceforge.net/foundry/3d/">3D</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/foundry/games/">Games</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/foundry/java/">Java</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/foundry/printing/">Printing</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><A class=menus 
+                  href="http://sourceforge.net/foundry/storage/">Storage</A> 
+                  &nbsp;<IMG height=7 src="parfiles_files/point1.png" width=7 
+                  border=0><BR><BR></P></TD></TR></TBODY></TABLE>
+            <TABLE cellSpacing=0 cellPadding=0 width=140 border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=center align=left><B>Language:</B><BR></TD></TR>
+              <TR>
+                <TD vAlign=center align=right><!--	
+
+		this document.write is necessary
+		to prevent the ads from screwing up
+		the rest of the site in netscape...
+
+		Thanks, netscape, for your cheesy browser
+
+	--><FONT 
+                  size=1>
+                  <FORM action=/account/setlang.php method=post><SELECT 
+                  onchange=submit() name=language_id> <OPTION 
+                    value=20>Bulgarian</OPTION> <OPTION 
+                    value=14>Catalan</OPTION> <OPTION value=12>Dutch</OPTION> 
+                    <OPTION value=1 selected>English</OPTION> <OPTION 
+                    value=13>Esperanto</OPTION> <OPTION value=7>French</OPTION> 
+                    <OPTION value=6>German</OPTION> <OPTION 
+                    value=19>Greek</OPTION> <OPTION value=3>Hebrew</OPTION> 
+                    <OPTION value=21>Indonesian</OPTION> <OPTION 
+                    value=8>Italian</OPTION> <OPTION value=2>Japanese</OPTION> 
+                    <OPTION value=22>Korean</OPTION> <OPTION 
+                    value=9>Norwegian</OPTION> <OPTION value=15>Polish</OPTION> 
+                    <OPTION value=18>Portuguese</OPTION> <OPTION value=16>Pt. 
+                    Brazillian</OPTION> <OPTION value=17>Russian</OPTION> 
+                    <OPTION value=23>Smpl.Chinese</OPTION> <OPTION 
+                    value=4>Spanish</OPTION> <OPTION value=10>Swedish</OPTION> 
+                    <OPTION value=5>Thai</OPTION> <OPTION 
+                    value=11>Trad.Chinese</OPTION></SELECT> <BR><NOSCRIPT><INPUT type=submit value=Change name=SUBMIT> 
+                  </NOSCRIPT></FORM></FONT><BR></TD></TR></TBODY></TABLE>
+            <P></P></TD>
+          <TD noWrap width=20 background=parfiles_files/fade1.png>&nbsp;</TD>
+          <TD vAlign=top width="99%" bgColor=#ffffff><BR><B>Project: 
+            parchive</B> 
+            <H2>Document Manager: Display Document</H2>
+            <H2></H2>
+            <P>
+            <HR noShade SIZE=1>
+            <A class=tabs 
+            href="http://sourceforge.net/projects/parchive/">Summary</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/project/admin/?group_id=30568">Admin</A>&nbsp;|&nbsp; 
+            <A class=tabs href="http://parchive.sourceforge.net/">Home 
+            Page</A>&nbsp;|&nbsp; <A class=tabs 
+            href="http://sourceforge.net/forum/?group_id=30568">Forums</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/tracker/?group_id=30568">Tracker</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/tracker/?group_id=30568&amp;atid=399698">Bugs</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/tracker/?group_id=30568&amp;atid=399699">Support</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/tracker/?group_id=30568&amp;atid=399700">Patches</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/mail/?group_id=30568">Lists</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/pm/?group_id=30568">Tasks</A>&nbsp;|&nbsp; 
+            <A class=tabselect 
+            href="http://sourceforge.net/docman/?group_id=30568">Docs</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/survey/?group_id=30568">Surveys</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/news/?group_id=30568">News</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/cvs/?group_id=30568">CVS</A>&nbsp;|&nbsp; 
+            <A class=tabs 
+            href="http://sourceforge.net/project/showfiles.php?group_id=30568">Files</A>&nbsp;|&nbsp;
+            <HR noShade SIZE=1>
+            <BR>
+            <P><B><A 
+            href="http://sourceforge.net/docman/new.php?group_id=30568">Submit 
+            new documentation</A> | <A 
+            href="http://sourceforge.net/docman/index.php?group_id=30568">View 
+            Documentation</A> | <A 
+            href="http://sourceforge.net/docman/admin/index.php?group_id=30568">Admin</A></B> 
+
+            <H2>Parity Volume Set specification 1.0 [2001-10-14]</H2>by Stefan 
+            Wehlus - initial idea by Tobias Rieper, further suggestions and 
+            format tweaking by Kilroy Balore, Willem Monsuwe and Karl Vogel. 
+            <HR>
+
+            <H3>Overwiev</H3>The following document describes a file format 
+            called Parity Volume Set.<BR>A Parity Volume Set provides RAID like 
+            parity records for a given number of files. With this parity records 
+            it is possible to restore missing files of the set.<BR><BR>An 
+            Example:<BR>You have 10 data files.<BR>
+            <TABLE border=1>
+              <TBODY>
+              <TR>
+                <TH>data files</TH>
+              <TR vAlign=top align=left>
+                <TD vAlign=top 
+                  align=left>Foobar.d01<BR>Foobar.d02<BR>Foobar.d03<BR>Foobar.d04<BR>Foobar.d05<BR>Foobar.d06<BR>Foobar.d07<BR>Foobar.d08<BR>Foobar.d09<BR>Foobar.d10</TD></TR></TBODY></TABLE><BR><BR><BR>With 
+            a program using this specification you can calculate parity volumes 
+            for these files. <BR>
+            <TABLE border=1>
+              <TBODY>
+              <TR>
+                <TH>parity volumes</TH>
+              <TR>
+                <TD>Foobar.p01<BR>Foobar.p02<BR>Foobar.p03<BR></TD></TR></TBODY></TABLE><BR><BR>The 
+            parity volumes contain a reed solomon checksum of the data of the 
+            data files. So if a file is missing or corrupt, it can be 
+            reconstructed out of the remaining data files and the parity 
+            volumes. Any file of this set can be reconstructed with any parity 
+            volume. You just need as much parity volumes, as files you are 
+            missing.<BR>For instance, in the example above, Foobar.d03 is lost. 
+            So it is possible to restore Foobar.d03 using the remaining data 
+            files and one parity volume. It doesn't matter, which parity volume 
+            (p01/p02/p03) - everyone will do...<BR>In case you miss 2 files, you 
+            need 2 parity volumes. What parity volumes and their combination 
+            (p01+p02/p01+p03/p02+p03) doesn't matter too - you just need two of 
+            them. (They have to be different: renaming a copy of foobar.p01 to 
+            foobar.p02 and using it with foobar.p01 to restore will not work...) 
+
+            <HR>
+
+            <H3>General Description</H3><BR>A parity volume set consists of two 
+            parts. First there is a .PAR file (the index file).<BR>It contains 
+            information about the files, which are "saved" in the volume 
+            sets:<BR>- what files are stored in the set<BR>- their checksums 
+            (MD5)<BR>- their size<BR>- their filename<BR>- a general comment for 
+            the set<BR><BR>Second there are the parity volume files. They are 
+            named .P00, .P01, P02..... PXX. (After .P99, there will be 
+            .Q00...)<BR><BR>They contain:<BR>- the same information as the PAR 
+            file (besides the comment) and<BR>- the calculated parity data of 
+            the stored files<BR><BR>
+            <HR>
+
+            <H3>Format specification for a .PAR/.Pxx file</H3>(The data is 
+            stored in "Intel notation".)<BR>
+            <TABLE border=1>
+              <TBODY>
+              <TR>
+                <TH>Offset:</TH>
+                <TH>Type (Size)</TH>
+                <TH>Data</TH>
+              <TR>
+                <TD>0x0000</TD>
+                <TD>8 Bytes</TD>
+                <TD>Identification String<BR>"PAR"\0<BR><BR>comment:<BR>-the 
+                  string "PAR" followed by 5 null bytes </TD></TR>
+              <TR>
+                <TD>0x0008</TD>
+                <TD>1 QWord</TD>
+                <TD>Version Number<BR>- The version number consists of two 
+                  parts:<BR>The low Dword (bit 0..31) is the version - $00010000 
+                  for v01.00<BR>The high Dword (bit 32..63) is a identifier for 
+                  the generating program. The client can use it to see, which 
+                  program generated the parity volume set. This may come in 
+                  handy, if your program needs to know, if it was the generator 
+                  itself. (Maybe to see, if it can use some proprietary bits in 
+                  the status register or to notify, if new versions are 
+                  out...)<BR>The coding is 
+                  "program"-"version"-"subversion"-"subsubversion".<BR>"program" 
+                  codes so far:<BR>00 - undefined<BR>01 - Mirror<BR>02 - 
+                  PAR<BR>Example: Mirror 0.2.1 has $01000201 as program 
+                  identifier. </TD></TR>
+              <TR>
+                <TD>0x0010</TD>
+                <TD>16 Bytes</TD>
+                <TD>control hash<BR>-a MD5 hash of the rest of the file 
+                  starting from 0x0020 to the end<BR>-used to detect a corrupt 
+                  file </TD></TR>
+              <TR>
+                <TD>0x0020</TD>
+                <TD>16 Bytes</TD>
+                <TD>set hash<BR>-used as a identifier for the parity volume 
+                  set<BR>Creation:<BR>Make a array of bytes (one dimendion, 
+                  size=used files*16). Then put the MD5 hashes (not the MD516k 
+                  hashes) there, starting with the first file. Use only the 
+                  files, which are included in the parity data (status bit 0 = 
+                  1). Then calculate the MD5 hash of this array. </TD></TR>
+              <TR>
+              <TR>
+                <TD>0x0030</TD>
+                <TD>1 QWord</TD>
+                <TD>volume number<BR>-the number of the parity volume<BR>-0 
+                  for the PAR file<BR>-1 for .p01, 2 for .p02, 3 for .p03 etc. 
+                </TD></TR>
+              <TR>
+                <TD>0x0038</TD>
+                <TD>1 QWord</TD>
+                <TD>number of files<BR>-the number of files stored in the 
+                  parity volume set<BR>(only the input data files - the parity 
+                  volumes are not counted)<BR>The files, which are not stored in 
+                  the parity data, but in the file list for CRC checking, are 
+                  counted too. So this is the number of files in the file list. 
+                </TD></TR>
+              <TR>
+                <TD>0x0040</TD>
+                <TD>1 QWord</TD>
+                <TD>start offset of the file list<BR>-the start offset of the 
+                  list of the stored files<BR></TD></TR>
+              <TR>
+                <TD>0x0048</TD>
+                <TD>1 QWord</TD>
+                <TD>file list size<BR>-the size of the file list in bytes 
+              </TD></TR>
+              <TR>
+                <TD>0x0050</TD>
+                <TD>1 QWord</TD>
+                <TD>start offset of the data<BR>-the start offset of the data 
+                  area </TD></TR>
+              <TR>
+                <TD>0x0058</TD>
+                <TD>1 QWord</TD>
+                <TD>data size<BR>-the size of the data area in bytes </TD></TR>
+              <TR>
+                <TD>0x0060</TD>
+                <TD>...</TD>
+                <TD>file list<BR>-This is the start of the list of the saved 
+                  files.<BR>-it consists of file entrys 
+            </TD></TR></TBODY></TABLE><BR>A file entry has the following 
+            format:<BR>
+            <TABLE border=1>
+              <TBODY>
+              <TR>
+                <TH>Offset:</TH>
+                <TH>Type (Size)</TH>
+                <TH>Data</TH>
+              <TR>
+                <TD>0x0000</TD>
+                <TD>1 QWord</TD>
+                <TD>entry size<BR>-the size of the file list entry in 
+                  bytes<BR>-counting starts at 1, this record is counted 
+                too<BR></TD></TR>
+              <TR>
+                <TD>0x0008</TD>
+                <TD>1 QWord</TD>
+                <TD>status field<BR>-64 bits for status flags or 
+                  numbers<BR>-currently only bit 0 and 1 are used:<BR>bit0 = 0 - 
+                  file is not saved in the parity volume set<BR>bit0 = 1 - file 
+                  is saved in the parity volume set<BR>bit1 = 0 - file is not 
+                  checked successfully yet<BR>bit1 = 1 - file was successfully 
+                  checked </TD></TR>
+              <TR>
+                <TD>0x0010</TD>
+                <TD>1 QWord</TD>
+                <TD>size<BR>-the size of the stored file in bytes </TD></TR>
+              <TR>
+                <TD>0x0018</TD>
+                <TD>16 Bytes</TD>
+                <TD>MD5 hash<BR>- a MD5 hash of the whole file </TD></TR>
+              <TR>
+                <TD>0x0028</TD>
+                <TD>16 Bytes</TD>
+                <TD>16k MD5 hash<BR>-a MD5 hash of the first 16384 Bytes of 
+                  the file<BR>-if the file is smaller then 16k, only the 
+                  existing bytes are used </TD></TR>
+              <TR>
+                <TD>0x0038</TD>
+                <TD>X Words</TD>
+                <TD>filename<BR>- the full filename with extension in 
+                  Unicode<BR>("foobar.d01")<BR>- paths are not allowed<BR>- no 
+                  end indicators, you have to compute the size out of the 
+                  entrysize (chars = (entrysize - 0x38) DIV 2) 
+            </TD></TR></TBODY></TABLE><BR>After the file list, the data area 
+            starts.<BR>For the PAR file, the data area contains a comment for 
+            the volume set. The comment is stored in uniode, control characters 
+            are allowed.<BR><BR>For the Pxx files, the data area contains the 
+            checksum data.<BR>Comupting of the checksum data:<BR>You have 
+            <I>n</I> files and want to create <I>m</I> parity data. So you 
+            create a data field <I>D1..Dm</I>, where <I>D1</I> is the first byte 
+            of file1, <I>D2</I> is the first byte of file2, <I>D3</I> is the 
+            first byte of file 3... <I>Dn</I> is the first byte of file 
+            <I>n</I>. For this field you create a field of <I>m</I> parity 
+            checksums <I>C1..Cm</I>. <I>C1</I> is stored as the first parity 
+            byte of .p01, <I>C2</I> is stored as the first parity byte of .p02, 
+            <I>C3</I> is stored as the first parity byte of .p03... <I>Cm</I> is 
+            stored as the first parity byte of .pm.<BR>Then process the second 
+            byte of all files and so on, until you reached the end of the 
+            biggest input file. If a file has no bytes left, use 0 for the 
+            calculation. So the size of the parity data will be the size of the 
+            biggest file stored in the parity volume set.<BR><BR>For calculating 
+            the checksums, the Reed-Solomon algorithm is used. A good 
+            description of this algorithm for programmers is <A 
+            href="http://www.cs.utk.edu/~plank/plank/papers/CS-96-332.html">http://www.cs.utk.edu/~plank/plank/papers/CS-96-332.html</A>.<BR>The 
+            "wordsize" is 8 bit, so you calculate with Bytes only. (This 
+            restricts the number of files + parity volumes to be less than 
+            256.)<BR><BR>Comments:<BR><BR>Why the 16k MD5 hashes?<BR>One 
+            demanded feature is, that the program will find its files even if 
+            the filenames are changed. So maybe, if the program won't find the 
+            files due to renaming, you click the "search" button and then it 
+            checks the MD5 hashes of all files in the directory to find his 
+            files. But with large numbers of large files this will take a long 
+            time. With the 16k hashes, the program only needs to check the first 
+            16k of each file. This will be much faster. If it finds a file, it 
+            can make a full hash too, just to be sure...<BR><BR>Why the file is 
+            saved - status flag?<BR>Maybe the PAR file is only used to provide 
+            file comments and checksums. The files are not saved in a PXX volume 
+            then. <BR><BR>Why the file is checked - status flag?<BR>So you can 
+            build in a function, that your program skips already successfully 
+            checked files. Repeated checking of the same set will be faster this 
+            way. (Like with QuickSFV) <BR>
+            <HR>
+
+            <H3>Implementation Issues</H3><BR>A file present in the file list 
+            doesn't have to be stored in the parity data at all times. So, some 
+            (or all) files can be just for checksum control or file comments in 
+            the PAR file. (In case, only a .SFV or .NFO functionality is 
+            needed...)<BR><BR>The saved files can be of any type and size. 
+            <BR><BR>There are no informations about the parity volumes stored in 
+            the header. So the program has to scan the directory for present 
+            parity volumes. They can be identified with the set 
+            hash.<BR><BR>There is no explicit rule for the order of the entrys 
+            in the filelist, but I recommend to sort the filenames in ascending 
+            order. 
+            <HR>
+
+            <H3>Copyright</H3>This document has no copyright. The introduced 
+            principles, the file format secification and it's details can be 
+            used free by everyone for any type of software. There will be no 
+            license or other limitations.<BR>It doesn't matter, if you are 
+            writing open, closed or shared source, public domain, freeware, 
+            shareware or commercial software - you can use this spec.<BR>But if 
+            you use the PAR/PXX file format and want to make changes to the 
+            format, you have to discuss them <A 
+            href="http://sourceforge.net/projects/parchive/">here</A> to 
+            maintain compatibility. <!-- end content -->
+            <P>&nbsp;</P></TD>
+          <TD width=9 bgColor=#ffffff>&nbsp; </TD></TR></TBODY></TABLE></TD>
+    <TD vAlign=bottom align=right width=17 
+    background=parfiles_files/rightbar1.png><IMG height=17 
+      src="parfiles_files/rightbar1.png" width=17 border=0></TD></TR>
+  <TR>
+    <TD background=parfiles_files/bbar1.png height=17><IMG height=17 
+      src="parfiles_files/bleft1.png" width=17 border=0></TD>
+    <TD align=middle background=parfiles_files/bbar1.png colSpan=3><IMG 
+      height=17 src="parfiles_files/bbar1.png" width=1 border=0></TD>
+    <TD background=parfiles_files/bbar1.png bgColor=#7c8188><IMG height=17 
+      src="parfiles_files/bright1.png" width=17 
+border=0></TD></TR></TBODY></TABLE></DIV><!-- themed page footer -->
+<P><A 
+href="http://sourceforge.net/source.php?page_url=/docman/display_doc.php"><B><FONT 
+color=white>Show Source</FONT></B></A> <BR>&nbsp; <!-- start OSDN Footer -->
+<TABLE cellSpacing=0 cellPadding=0 width="100%" border=0>
+  <TBODY>
+  <TR bgColor=#999999>
+    <TD><IMG height=1 alt="" src="parfiles_files/blank.gif" width=1></TD></TR>
+  <TR vAlign=center align=middle>
+    <TD class=osdn-foottext height=50>© Copyright 2001 - <A class=legallink 
+      href="http://www.osdn.com/">OSDN</A> Open Source Development Network, All 
+      Rights Reserved<BR><A class=legallink 
+      href="http://sourceforge.net/docman/display_doc.php?docid=6025&amp;group_id=1">About 
+      Sourceforge.net</A> &nbsp;•&nbsp; <A class=legallink 
+      href="http://www.osdn.com/about.shtml">About OSDN</A> &nbsp;•&nbsp; <A 
+      class=legallink 
+      href="http://sourceforge.net/docman/display_doc.php?docid=6049&amp;group_id=1">Privacy 
+      Statement</A> &nbsp;•&nbsp; <A class=legallink 
+      href="http://sourceforge.net/docman/display_doc.php?docid=6048&amp;group_id=1">Terms 
+      of Use</A> &nbsp;•&nbsp; <A class=legallink 
+      href="http://www.osdn.com/advertise">Advertise</A> &nbsp;•&nbsp; <A 
+      class=legallink 
+      href="http://sourceforge.net/docman/display_doc.php?docid=7632&amp;group_id=1">Contact 
+      Us</A></TD></TR>
+  <TR bgColor=#999999>
+    <TD><IMG height=1 alt="" src="parfiles_files/blank.gif" 
+  width=1></TD></TR></TBODY></TABLE><!-- end OSDN Footer --><LAYER 
+onLoad="moveToAbsolute(adlayer.pageX,adlayer.pageY); clip.height=60; clip.width=468; visibility='show';" 
+visibility="hide" height="60" width="468" 
+SRC="http://sfads.osdn.com/1.html"></LAYER></P></BODY></HTML>

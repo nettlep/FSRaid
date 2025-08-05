@@ -1,0 +1,23 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FSRaid", "FSRaid.vcproj", "{027FCD88-2261-42F4-9247-A0DAE0DB0E5F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{027FCD88-2261-42F4-9247-A0DAE0DB0E5F}.Debug.ActiveCfg = Debug|Win32
+		{027FCD88-2261-42F4-9247-A0DAE0DB0E5F}.Debug.Build.0 = Debug|Win32
+		{027FCD88-2261-42F4-9247-A0DAE0DB0E5F}.Release.ActiveCfg = Release|Win32
+		{027FCD88-2261-42F4-9247-A0DAE0DB0E5F}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+	GlobalSection(SolutionNotes) = postSolution
+	EndGlobalSection
+EndGlobal

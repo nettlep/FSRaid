@@ -1,0 +1,62 @@
+// ---------------------------------------------------------------------------------------------------------------------------------
+//   __     _   _
+//  / _|   | | | |
+// | |_ ___| |_| |
+// |  _/ __| __| |
+// | | \__ \ |_| |
+// |_| |___/\__|_|
+//
+// Description:
+//
+//   Use this file to manage proper inclusion order for all fstl files
+//
+// Notes:
+//
+//   Best viewed with 8-character tabs and (at least) 132 columns
+//
+// History:
+//
+//   06/04/2001 by Paul Nettle: Original creation
+//
+// ---------------------------------------------------------------------------------------------------------------------------------
+// Originally released under a custom license.
+// This historical re-release is provided under the MIT License.
+// See the LICENSE file in the repo root for details.
+//
+// https://github.com/nettlep
+//
+// Copyright 2002, Fluid Studios, all rights reserved.
+// ---------------------------------------------------------------------------------------------------------------------------------
+//
+// MSVC Handy tip! Edit your autoexp.dat file (for MSVC) and add this to the end, then restart MSVC
+//
+//  ; From FSTL
+//  fstl::string=<_buffer,s>
+//  fstl::error=<_messages._buf[0]._buffer,s>
+//  fstl::array<*>=size=<_size,u>
+//  fstl::list<*>=size=<_size,u>
+//  fstl::hash<*>=size=<_size,u>
+//
+// ---------------------------------------------------------------------------------------------------------------------------------
+
+#ifndef	_FSTL_FSTL
+#define _FSTL_FSTL
+
+//#define	_LINUX
+
+// ---------------------------------------------------------------------------------------------------------------------------------
+
+#include "common"
+#include "string"
+#include "util"
+#include "error"
+#include "array"
+#include "list"
+#include "reservoir"
+#include "hash"
+
+#endif // _FSTL_FSTL
+// ---------------------------------------------------------------------------------------------------------------------------------
+// fstl - End of file
+// ---------------------------------------------------------------------------------------------------------------------------------
+

@@ -1,0 +1,517 @@
+<html>
+	<head>
+		<title>FSRaid Help</title>
+		<style type="text/css">
+			BODY { color: #9BB8D3; font-style: normal; font-family: verdana, tahoma, helvetica; font-size: 11px; text-decoration: none; font-weight: normal; margin-top: 3px; margin-bottom: 3px; margin-left: 3px; margin-right: 3px; }
+			TD   { color: #9BB8D3; font-style: normal; font-family: verdana, tahoma, helvetica; font-size: 11px; text-decoration: none; font-weight: normal; margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; }
+			A       { color: #C0D1E1; font-weight: normal; font-size: 11; text-decoration: none; }
+			A:hover { color: #D2E5F6; text-decoration: underline; }
+			font.copyright { color: #9BB8D3; }
+			font.header { color: #D2E5F6; font-style: normal; font-family: verdana, tahoma, helvetica; font-size: 16px; text-decoration: normal; font-weight: normal; }
+			font.title { color: #D2E5F6; font-style: normal; font-family: verdana, tahoma, helvetica; font-size: 26px; text-decoration: normal; font-weight: normal; }
+		</style>
+	</head>
+	<body bgcolor="#285E91">
+		<center><table width="690" cellpadding="0" cellspacing="0">
+				<tr>
+					<td>
+						<table width="690" cellpadding="0" cellspacing="0">
+							<tr>
+								<td>
+									<a href="http://www.FluidStudios.com/" target="_new"><img src="logo.jpg" border="0"></a>
+								</td>
+								<td>
+									<font class="header">Table of contents</font>
+									<p>
+										<a href="#sec1">About this documentation</a><br>
+										<a href="#sec2">So what’s this program for, anyway? (a.k.a. What are PAR files?)</a><br>
+										<a href="#sec3">How does it work?</a><br>
+										<a href="#sec4">How do I use it?</a><br>
+										<a href="#sec5">Can I control FSRaid's memory consumption?</a><br>
+										<a href="#sec6">Why don't files with the wrong filename show up as misnamed files?</a><br>
+										<a href="#sec7">What is a non-recoverable file?</a><br>
+										<a href="#sec8">Can I create parity archives from many differently-sized files?</a><br>
+										<a href="#sec9">When I start FSRaid, the window never appears, but it's on my taskbar. What gives?</a><br>
+										<a href="#sec10">Can I add parity archive files to an existing set, even somebody else's dataset?</a><br>
+										<a href="#sec11">What is the download monitor and how do I use it?</a><br>
+										<a href="#sec12">Is there a mailing list for FSRaid updates?</a><br>
+										<a href="#sec13">When I run FSRaid, why do I see two copies in my task manager?</a><br>
+										<a href="#sec14">Does FSRaid support Unicode?</a><br>
+										<a href="#sec15">Limitations of PAR files</a><br>
+										<a href="#sec16">Limitations of FSRaid</a><br>
+										<br>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="3" bgcolor="#5F8EBB">
+									&nbsp;
+								</td>
+							</tr>
+						</table>
+						<br>
+						<center><font class="copyright">&copy; 2001 <a href="http://www.FluidStudios.com/" target="_new">Fluid 
+									Studios</a> &amp; Paul Nettle. All Rights Reserved.</font></center>
+						<br>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<a name="sec1"><font class="header">About this documentation</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							This documentation adheres strictly to the minimalist mindset. There’s a lot 
+							more in this program than meets the eye - lots of hidden little niceties that I 
+							won’t bother to document. Besides, surprises are fun, when they’re surprises of 
+							convenience.
+							<p>
+							If you need to contact the author, see the about box.
+							<p>
+							Finally, this help window is resizable.
+						</ul>
+						<a name="sec2"><font class="header">So what’s this program for, anyway? (a.k.a. What are PAR 
+								files?)</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							Have you ever downloaded a large set of files that is completely useless 
+							because a small subset of those files were corrupt or missing? This happens 
+							quite often in the Usenet Newsgroups.
+							<p>
+							Let’s consider a common example: say there are 100 files on a website or 
+							newsgroup that you want to download. A common example is a set of RAR files 
+							(often named with extensions like rar, r01, r02, etc.) In order to extract this 
+							archive, you’ll need every single file in the RAR archive set. If any one file 
+							is corrupt, your entire RAR archive could be useless – newsgroups are notorious 
+							for this.
+							<p>
+							If the person distributing these files had made a set of PAR files and placed 
+							them online, your problems might just be solved. Just download the PAR files 
+							and place them in the same directory as your data files. If the number of PAR 
+							files is equal to or exceeds the number of corrupt files, then the PAR files 
+							can be used to restore the original files.
+							<p>
+							PAR files contain very rigorous fingerprinting data on the original file set, 
+							so with a tool like FSRaid, you can accurately determine which of your original 
+							files is valid, which are corrupt, etc.
+							<p>
+							It doesn’t matter how many files are corrupt, as long as you have as many, or 
+							more, PAR files than you have corrupt or missing data files. It also doesn’t 
+							matter which files go bad. A single PAR file can restore any one of the 
+							original files.
+						</ul>
+						<a name="sec3"><font class="header">How does it work?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							How is this possible? It’s a rather complex set of algebraic operations that 
+							allow this kind of restoration. However, here’s a very simplified explanation 
+							that might help you understand why this is possible in the first place.
+							<p>
+							Remember, PAR stands for Parity ARchive. This means that PAR files contain 
+							parity information from the set of files. A simple example of parity would be 
+							the sum of all the numbers. So let’s consider four files, each of which only 
+							contain a single byte. These bytes are: 1, 88, 32, 99. We’ll calculate a parity 
+							byte as (1 + 88 + 32 + 99 = 220). With this information, we can restore any of 
+							the original bytes. All we have to do is subtract the remaining bytes (the ones 
+							we still have) from the parity value. The result will be the original byte. If 
+							we lose the “88” we can calculate it by: 220 – 99 – 32 – 1 = 88. It doesn’t 
+							matter which byte we lose, we can always restore it. It’s a mathematical 
+							certainty!
+							<p>
+						</ul>
+						<a name="sec4"><font class="header">How do I use it?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							<center>
+								<font class="header">The main window interface</font>
+								<p>
+									<image src="help1.gif">
+							</center>
+							<p>
+							The primary difference between FSRaid and similar tools is that it uses 
+							graphical maps (A &amp; C) to show you the of the status of your files. With 
+							these maps, you can quickly locate corrupt or missing files without the need of 
+							scanning a text list. We’ll start by explaining the maps and work our way 
+							around the application from there.
+							<p>
+							The map consists of a number of maplets (colored blocks). Each maplet 
+							represents a file in the file set; the color represents its status. Colors 
+							include Green for valid, Yellow for missing, Red for corrupt, etc. There are 
+							actually a number of possible states (colors) a file may have, so a legend is 
+							supplied. Note that each file may also have more specific information (for 
+							example, an error may be caused by many things.) In this case, simply hover 
+							your mouse over the maplet to get more detailed information about the state of 
+							the file. Note that the PAR file (as opposed to one of the numbered Pxx files) 
+							will have a slightly different visual, in order to distinguish it from the 
+							others, as this particular file does not specifically count toward data 
+							recovery.
+							<p>
+							As you hover your mouse over a maplet you will see the file information 
+							displayed in the status box (B &amp; D) above the associated map.
+							<p>
+							You may also right-click on a maplet for a context menu of options available 
+							for that particular file. From this context menu, you can perform file-specific 
+							options, such as repairing an individual file, deleting a file, etc.
+							<p>
+							At the top of the main application window, you’ll find the Parity file that is 
+							currently loaded (F) and a summary of statistics for the entire file set (E). 
+							This summary includes how many total files with the number of files that were 
+							marked as non-recoverable files in parenthesis, followed by the number of files 
+							that are valid, corrupt, misnamed, missing, unknown (i.e., a status hasn’t yet 
+							been determined for the file), contain errors (the software was unable to read 
+							the file, for example), and the number of files needed in order to repair the 
+							set.
+							<p>
+						</ul>
+						<a name="sec5"><font class="header">Can I control FSRaid's memory consumption?</font>
+						</a>
+						<hr color="#5F8EBB">
+						<ul>
+							Yes, there's a slider found in the preferences dialog. This slider allows you to
+							control the ratio of <b>performance</b> to <b>memory consumption</b>. In practice,
+							using more memory only gains only a very little bit of extra performance, so the
+							default to this value is set to only 10%. Chances are, increasing this to 50%
+							will increase your memory usage by five times, but only gain you about 1% more
+							performance.
+							<p>
+							This percentage represents a fraction of your total physical memory. So, if you 
+							have a machine with 512MB installed, 10% will use approximately 51MB - 52MB. On 
+							a 64MB machine, a setting of 10% may result in a 5MB - 6MB usage.
+							<p>
+							Use caution when setting this slider to a higher value. If your machine is 
+							heavily burdened and many applications are running (consuming a large portion 
+							of your memory) you may find that the application runs considerably slower due 
+							to disk swapping, in order to make room for the allocations you've requested.
+							<p>
+							Finally, note that the application may not use all of the memory you've allowed 
+							it to use. If you've set the slider to 50% on a 256MB machine (i.e., allowing 
+							FSRaid to consume as much as 128MB), it doesn't mean that FSRaid <i>will</i>
+							consume that memory, just that it will not consume more than that amount.
+							<p>
+						</ul>
+						<a name="sec6"><font class="header">Why don't files with the wrong filename show up as misnamed files?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							The only misnamed files that will be listed in the statistics (or in the maps) 
+							are those files that are named incorrectly as another file in the existing set. 
+							In other words, the filenames of two files were incorrectly swapped. Both 
+							filenames belong in the set, but they are also both incorrect. You can use the 
+							“Fix names” button to repair these filenames. Because these misnamed files are 
+							considered corrupt, they count against you when it comes to determining whether 
+							or not a set can be recovered. This means that the tool may tell you that you 
+							need more files to complete the set than you actually need. However, after 
+							using the “Fix names” feature, this count will be corrected.
+							<p>
+							Files that are incorrectly named with a name that does not belong to the set, 
+							will appear as missing. You can find and repair these filenames with the “Fix 
+							names” button. In this case, the tool will scan the directory for any files 
+							that belong to the set, regardless of their current filename, and properly 
+							rename the files. This is the case for both, data files AND parity files.
+							<p>
+						</ul>
+						<a name="sec7"><font class="header">What is a non-recoverable file?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							When a parity archive is created, you can mark any of the files as 
+							“non-recoverable”. This means that these files will not be included in the 
+							parity data. If those files go bad, they cannot be recovered. This feature is 
+							primarily intended for informational files (README files, NFO files, of SFV 
+							files, for example) that are not crucial to the data files. This feature is 
+							intended to allow you to include files in the parity archive for the sole 
+							purpose of validity verification, not restoration.
+							<p>
+						</ul>
+						<a name="sec8"><font class="header">Can I create parity archives from many differently-sized files?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							Yes, but sometimes, it's not the right thing to do.
+							<p>
+							Parity archive files are the size of the largest data file in the input set. So 
+							if you create a parity archive set from a set of 100 data files, then the size 
+							of the parity archives will be the size of the largest file from your 100 data 
+							files. If your original files are mostly very small (under 1K) but there is one 
+							very large file in the set (10 Meg) you will find that your parity files are 
+							very large.  In extreme cases, the parity files may be much larger than the 
+							total of all the input data files.
+							<p>
+							In order to reduce this excessive abuse of data storage, it is recommended that
+							you use parity archives on similarly sized data files. If you must, try groups
+							of files from the original set of files, based on file size, and creating parity
+							archives for each set.
+							<p>
+							Ideally, however, it might just be best to use an archive tool on them (such as
+							a multi-volume archiver like <a href="http://www.rarsoft.com/" target="_new">WinRAR</a>)
+							in order to balance out the file sizes.)
+							<p>
+						</ul>
+						<a name="sec9"><font class="header">When I start FSRaid, the window never appears, but it's on my taskbar. What gives?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							FSRaid will remember its position on your desktop (see the preferences
+							to disable this.) At some point, FSRaid may have been moved off-screen. Or,
+							you may have changed your desktop resolution leaving FSRaid in a portion of
+							the desktop that's no longer visible.
+							<p>
+							If you wish to reset the position, just hold down the <b>SHIFT</b> key while
+							FSRaid is starting up. Be sure to close all existing copies of FSRaid before
+							you do this, because the last FSRaid window you close will be the one saving
+							the window position.
+							<p>
+						</ul>
+						<a name="sec10"><font class="header">Can I add parity archive files to an existing set, even somebody else's dataset?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							Yes, you can replace or even add parity archives to an existing set.
+							<p>
+							Here's an example scenario (using newsgroups) that will point out the greater 
+							potential of PAR files that only a few people are aware of. I'm going to be a 
+							bit wordy about this, since it's somewhat confusing.
+							<p>
+							The original poster uploads a set of parity archive files (par, p01-p04) for a 
+							set of data files (rar, r00-r48). Unfortunately, the post suffered from 
+							horrible data loss on many different servers, and 6 files are corrupt. To make 
+							matters worse, the corrupt files on your server are fine on other servers, but 
+							those other servers suffered from the loss of a completely different set of 6 
+							files.
+							<p>
+							So, individually, nobody has enough to recreate the set, but collectively, you 
+							do.
+							<p>
+							Now, let's say you have access to two different servers, and from those two 
+							servers, you're able to reconstruct the entire set of data files. And, just to 
+							make it interesting, you're the only person on the entire Net that has this 
+							magic combination of newsgroup servers to allow you to be the only one with all 
+							the data files (after reconstruction, of course.)
+							<p>
+							So, what are you to do? Repost the corrupt data files? Well, which files would 
+							that be? Even if you were to post all the data files you found corrupt on both 
+							of your servers, you might still not help everybody because they're suffering 
+							from a completely different set of corrupt data files.
+							<p>
+							There is no way for you to know which files are corrupt on these other servers. 
+							This, of course, is the whole point behind par files, but unfortunately, it's 
+							not helping in this case because the original poster didn't post enough par 
+							files.
+							<p>
+							So the better solution would be to add a few more pxx files to the post. You 
+							take your data files and create a new set of pxx files. You create 12 pxx files 
+							because this is the worst case of data loss the net has ever seen. :) You then 
+							upload p05-p12 (remember, the original post already contained p01-p04). That's 
+							all you need to upload. Problem solved for everybody, regardless of which data 
+							files are bad on the various servers.
+							<p>
+							This works regardless of which program was used to create the original pxx 
+							files and regardless of which program was used to create the new set of pxx 
+							files.
+							<p>
+							In order for this to work, you need to be careful of a few things:
+							<p>
+							<ol type="1">
+								<li>
+									The earlier versions of Mirror are not compatible with current pxx files.
+									If the original pxx files were created with this incompatible version of
+									Mirror, then the new pxx files would also need to be created with that
+									same version.
+								</li>
+								<li>
+									When creating the new set of pxx files, be sure to create that set with the 
+									same data file settings -- if the original poster included an NFO and and an 
+									SFV file that were marked as non-recoverable, then you'll also need to include 
+									these files (marked as non-recoverable) in the new set. If you don't do this, 
+									the pxx sets (original and new) won't match.
+								</li>
+								<li>
+									Pay special attention that your data files are correct. For example, many SFV 
+									tools will modify the SFV file. Be sure to include the original SFV file when 
+									creating the new set of pxx files, or the new pxx set won't match.
+								</li>
+								<li>
+									After you've created your new pxx set (the set with the extra pxx files), test 
+									it to make sure the data files and settings matched. To do this, start by 
+									making a backup of the original pxx files you were able to download. Then, 
+									after creating the new set, delete those files from the new set that are the 
+									same as the ones from the original set. Then copy those files from the original 
+									set back into the directory you're working from. This should result in a 
+									complete set of mixed pxx files, where some belong to the original set, and 
+									some belong to the new set. Load up FSRaid and see if it recognizes all the pxx 
+									files as being from the same set. If so, you're good to go.
+								</li>
+							</ol>
+							<p>
+							Important notes regarding point #4:
+							<p>
+							When you backup your original pxx files, make sure to move them out of the 
+							working directory. Also, make sure that when you delete the files from the new 
+							set, you actually delete them (or move them out of the working directory). In 
+							both cases, do not simply rename the files, as FSRaid is 100% thorough about 
+							locating pxx files and ignoring duplicates. If you're not careful about this, 
+							FSRaid will outsmart you and find the files belonging to the set you've loaded, 
+							and you won't get a true test for compatibility.
+							<p>
+						</ul>
+						<a name="sec11"><font class="header">What is the download monitor and how do I use it?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							The download monitor is for the truly lazy people out there (like me. :) This 
+							feature is really a bunch of great features in one.
+							<p>
+							The purpose of the download monitor is to monitor the download of an entire 
+							dataset as a whole, and notify you when the download is complete. When the 
+							download monitor determines that you have enough data files for a complete set, 
+							it will automatically exit with a sound. If a repair is required, it will also 
+							notify you that you have enough files, but that a repair is needed and ask if 
+							you would like an automatic repair.
+							<p>
+							In order for this to work, you'll need at least one parity file. This can be 
+							the index file (PAR) or one of the archive files (Pxx). With a parity file 
+							loaded, if the set is incomplete, then the <b>Download Monitor</b>
+							button will be enabled.
+							<p>
+							The download monitor will keep you informed of the overall progress of the 
+							dataset download via a two-tone progress bar. The download monitor will monitor 
+							the lengths of files as they are downloaded, consider how much these 
+							incremental file size changes contribute to the entire dataset, and update the 
+							progress bar accordingly.
+							<p>
+							When a file download is complete, the download monitor will automatically 
+							validate the file. If the file is determined valid then that portion of the 
+							progress bar (which represents a single file in the dataset) will darken, while 
+							the rest of the progress bar continues to move forward as newer files are 
+							downloaded. Note that some download software does not download directly into 
+							the destination directory (IE, for example, downloads into a temporary file, 
+							and copies the final file over when the download is complete.) In these cases, 
+							the download monitor cannot monitor the file as it is downloaded.
+							<p>
+							With this, you can quickly see how much data has been validated, and how much 
+							data is &quot;in progress&quot;. This works, even if you are downloading 
+							multiple files from multiple servers simultaneously.
+							<p>
+							If a downloaded file is considered corrupt, then the progress bar may step 
+							backwards to subtract that file's contribution to the overall download. While 
+							the download is progressing, the download monitor will also update the standard 
+							FSRaid interface, so the maplets will update in real-time as well as the 
+							statistics. Therefore, if you see the progress bar take a step backwards, you 
+							will also see a maplet turn red, letting you know why.
+							<p>
+							The download monitor will monitor (and consider) both data files and parity 
+							archive files alike. Note that it only monitors files in the directory where 
+							the parity archive file was loaded.
+							<p>
+							You can set how often the download monitor checks the directory for changes to 
+							the status of files. To set this interval, see the preferences. You can use 
+							this feature to control how much CPU power the download monitor uses. On a 1GHz 
+							P3, with the interval set all the way down to 1 second, the download monitor 
+							only uses about 7% of the CPU power (of course, this will vary depending on a 
+							lot of things.)
+							<p>
+							There are a few minor caveats to the download monitor...
+							<p>
+								<ul>
+									These aren't really problems with the download monitor; rather they are things 
+									that you might find a bit confusing and want to email me about. So I figured 
+									I'd try to explain them here in order to avoid a bunch of emails. I may be able 
+									to find a way around some of these issues in the future, but for now, you're 
+									stuck with what you get. :)
+									<p>
+									<li>
+										I've not personally seen this myself, but it is possible that the download 
+										monitor may cause &quot;file access collisions&quot; while files are downloded. 
+										This happens because the download monitor must access the file in order to 
+										obtain its length, and some programs may complain that the file currently being 
+										downloaded cannot be written to. If your software complains about this, then 
+										you may not be able to use the download monitor with that software.
+									</li>
+									<p>
+									<li>
+										The download monitor will find misnamed files (i.e., files with the wrong
+										name, but a name that still belongs to another file in the set.) It will
+										not do the equivalent of a "Fix Names" (finding files that have names that
+										are not part of the dataset.)
+									</li>
+								</ul>
+						</ul>
+						<a name="sec12"><font class="header">Is there a mailing list for FSRaid updates?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							Yes, thanks to the <a href="http://parchive.sourceforge.net/" target="_new">Parchive</a> site.
+							<p>
+							This mailing list isn't just for FSRaid, but includes other PAR tools as well.
+							To sign up, follow this link:
+							<p>
+							<ul>
+								<a href="http://lists.sourceforge.net/lists/listinfo/parchive-clients-news" target="_new">http://lists.sourceforge.net/lists/listinfo/parchive-clients-news</a>
+							</ul>
+							<p>
+						</ul>
+						<a name="sec13"><font class="header">When I run FSRaid, why do I see two copies in my task manager?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							This, unfortunately, is a necessary evil.
+							<p>
+							Since Windows 95/98/Me do not support Unicode (non-ASCII character sets), FSRaid must be shipped with
+							an extra DLL file, called UnicoWS.dll. This file doesn't add Unicode support to the operating system
+							but rather, it allows FSRaid to run as a Unicode application, in a non-Unicode enviromnent.
+							<p>
+							Until now, FSRaid has been a single-file solution. You don't need to install anything, you just run it.
+							This is great for situations where a PAR file tool must be distributed with the PAR files. However, the
+							requirement of this extra file put a kink in the works. It is needed on 95/98/Me operating systems, but
+							not on NT Kernel operating systems (NT/2000/XP). I also didn't want to distribute (and maintain) two
+							different versions.
+							<p>
+							The solution was to package the DLL and EXE in a separate executable (right inside the EXE file) and extract
+							them when you run it. So when you run FSRaid, you're really running a <i>stub</i> program that simply extracts
+							these two files to your temp dir, runs the real FSRaid program (in the temp dir) and deletes the files when
+							the program exits.
+							<p>
+							This means that there are two copies of FSRaid running at the same time: the stub and the actual program (which shows up as "FSRaidUserInterface" in your task manager). It
+							is necessary for the stub to continue running, so that it can capture the result code from the FSRaid program
+							and pass it back to the operating system. This is necessary for batch file support.
+							<p>
+							In the end, you see two entries for FSRaid in your task manager, but don't worry, it won't hurt anything.
+							<p>
+						</ul>
+						<a name="sec14"><font class="header">Does FSRaid support Unicode?</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							Yes.
+							<p>
+							You should be aware that older operating systems (95/98/Me) do not support Unicode filenames. However, FSRaid will
+							continue working on those operating systems (for ASCII filenames only) like normal.
+							<p>
+							If you are using an operating system based on the NT kernel (NT/2000/XP) then you can make use of Unicode
+							filenames. Just be aware that this may cause problems for those users that are running on non-NT-based
+							operating system hosts; these users may not be able to repair your file sets!
+							<p>
+						</ul>
+						<a name="sec15"><font class="header">Limitations of PAR files</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							At the present time, a PAR file is limited to 256 total files. In other words, 
+							the total number of files (parity files plus data files) may not be greater 
+							than 256. This limit is related to the mathematical algorithms used to recover
+							missing data. Therefore, in order to push this limitation back (to, say, 64000
+							files instead of 256) the existing programs would need to be modified and a
+							revised file format would need to be implemented.
+							<p>
+							Note that files marked as non-recoverable do not count against this limit –
+							you may have as many non-recoverable files as you wish.
+							<p>
+						</ul>
+						<a name="sec16"><font class="header">Limitations of FSRaid</font> </a>
+						<hr color="#5F8EBB">
+						<ul>
+							At the present time, the largest data file (data file or parity archive) may
+							not exceed 4GB in size. You may, however, have a dataset that exceeds 4GB total.
+							For example, 50 files each file being 1GB in size, total of 50GB will work fine.
+							<p>
+							This limitations is strictly a limitation of FSRaid and is not a limitation
+							imposed by the PAR file.
+							<p>
+							Limitations found in this section may very well be lifted in future versions of 
+							FSRaid.
+							<p>
+						</ul>
+					</td>
+				</tr>
+			</table>
+		</center>
+	</body>
+</html>

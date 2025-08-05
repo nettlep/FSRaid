@@ -1,0 +1,147 @@
+Hey Paul,
+
+Check this out for a simple explanation of the Reed-Solomon technique and see if
+it makes sense. I did it with MOD256 addition instead of XOR but same
+difference, it's just hard to justify the algebra with XOR. Post me back with
+any comments. I'd love to here them and maybe you can put some stuff into it.
+
+This stuff from the end of John Ross McMaster's nfo delves into the math of it,
+sort of. More like a mathematical proof of it. Excuse the fact that it was from
+a reply to a post and should have been edited (more) before added. Of course,
+I'm too lasy to edit it now either, so I don't fault him.
+
+Enjoy,
+Dudeman
+
+Extracted from "PAR Explained nfo.nfo" - by John Ross McMaster
+
+-----------------------------------------------------------------
+How PAR Works By Dudeman
+_________________________________________________________________
+Dude you gotta go read up on this. PAR's are used for the whole file,
+not segments. They were talking about doing it for segments but they 
+would have to make (or reverse engineer) a reader or news grabber to
+make this work. (well thats what they think anyway).
+
+Quick run through, remember I think said it was the summed parity
+of all the bytes of a set of files. Well it was like that, now it is
+different.
+
+The old way (hex numbers (base 16 or 4bits), 2 hex numbers is a byte
+(8 bits) :
+
+blah.r00 = 12 34 56 78 9A BC .........
+blah.r01 = 01 02 03 04 05 06 .........
+blah.r02 = 02 04 06 08 0A 0C .........
+the bytewise sum in MOD256 (or bytewise XOR) is the p01 file =
+blah.p01= 15 3A 5F 84 A9 CE .......
+
+So p01=r00+r01+r02 and conversely r00=p01-r01-r02 or for any one of
+the 3 rxx files, you subtract the other 2 from the p01 file to get it
+back. It only works for one missing file. Basically 15-02=13 but
+13=12+01 or 11+02 or etc.... 
+
+You can prove this to yourself with the wincows calculator, it does
+hex in scientific mode. It works. MOD 256 means only take the 2 least
+significant numbers from the answer. Like FF+1=100 but in MOD256, it
+equals 00.
+
+So this was the old way, which is where the "you can only be missing
+one file of the set" was from. The new way, as was said by John and
+Don, is by matrix method called Reed-Soloman coding and I have no good
+way to explain it, nor did I look into the math too hard (just haven't
+had the time). I think the basis is that each pxx file is a function
+(or equation) of the bytes of all the files of the post, not just a
+subset. So each pxx is an equation of all the files, and your missing
+2 files, so you get 2 pxx files. What you now have is 2 equations 2
+unknowns. Now it is simple algebra.
+
+All right, for my next trick, I will attempt a simple mathmatic proof
+of the Reed-Solomon coding method. Mrs. P blindfold please......(make
+drum roll sounds while you read it)
+
+OK class, for this example we will use the 3 data files as our post
+and make 3 pxx files from the following matrix (why? because I have an
+example of a 3 by 3 Reed Solomon matrix and don't want to calculate
+the Vandermonde matrix for another example, but don't post 3 pxx's for
+3 data files, it's just wrong)
+
+The matrix
+ 1 1 1
+ 1 2 3
+ 1 4 9
+
+So if p1, p2, p3 are parity files and d1, d2, d3 are data files then:
+p1=1(d1)+1(d2)+1(d3)
+p2=1(d1)+2(d2)+3(d3)
+p3=1(d1)+4(d2)+9(d3)
+
+So say we are missing d1 and d2 so we get p1 and p2, we get 2
+equations and 2 unknowns:
+d1+d2=p1-d3
+d1+2(d2)=p2-3(d3)
+
+so subtracting the first equation from the second removes the d1 and
+yields:
+d2=p2-p1-2(d3)
+
+and subtracting the second from 2 times the first cancels d2 and
+yields:
+d1=2(p1)-p2+d3
+
+So d1 and d2 are now known. As can be seen, this would work with any
+combination of 2 of the px files and will work for loss of any 2 data
+files.
+
+Lets do the earlier example rxx files:
+
+blah.r00 = 12 34 56 78 9A BC .........
+blah.r01 = 01 02 03 04 05 06 .........
+blah.r02 = 02 04 06 08 0A 0C .........
+then p01 and p02 are
+blah.p01= 15 3A 5F 84 A9 CE .......
+blah.p02= 1A 44 6E 98 C2 EC .......
+
+so using the solutions for d1 and d2:
+byte1 of blah.r00 = 2(15)-1A+02 = 12
+byte2 of blah.r01 = 1A-15-2(02) = 01
+
+The rest of the bytes will work out the same. As for the way the
+technique does it, the solution comes from a matrix equation. The
+matrix equation for missing d1, d2, and p3 is:
+
+ 0 0 1 ^-1     d1    d3
+ 1 1 1       *  d2 = c1
+ 1 2 3           d3   c2
+
+which should give you (though I can't remember how to do an inverse
+matrix to prove it)
+
+  1  2 -1      d3     d1
+ -2 -1  1  *   c1 = d2
+  1  0  0      c2     d3
+
+This matrix gives us the 2 equations we had and another d3=d3 (no way,
+duh). This is how it would solve for more than 2 unknowns. I would
+have to do a couple of iterations. 
+
+Note the matrix for the par files is the number of data files wide
+(call this n) by the number of par files tall (call this m). The total
+files n+m must be less than 2 to the number of bits. For mirror the
+number of bits is 8 (a byte) so the max number of files plus pxx must
+be less than 256 (due to the MOD256 stuff). And note the matrix for
+the par files is 1,2,3,4,5,.... carried to the power of the row-1 for
+each row. This, I believe, makes the equations reduce easier and
+probably makes the matrix stuff easier.
+
+Well now you know more than you wanted to. If you want to,
+you can put this in your explanation of the par files. I might throw
+this to the mirror creators for their use too. It is a lot less math
+than explaining the matrix calcs for the layman. I don't even
+understand that fully.
+
+Well, perhaps math-magical matrix was a better explanation after all.
+
+Dudeman
+"Techi-puke at your service"
+

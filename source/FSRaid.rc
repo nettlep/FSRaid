@@ -1,0 +1,477 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)\r\n"
+    "LANGUAGE 9, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\FSRaid.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""afxres.rc""         // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\FSRaid.ico"
+IDR_COMP_LOGO           ICON                    "res\\companyLogo.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 439, 270
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION
+CAPTION "About FSRaid"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,382,251,50,12,WS_GROUP
+    CONTROL         "",IDC_ABOUT_BROWSER,
+                    "{8856F961-340A-11D0-A96B-00C04FD705A2}",WS_TABSTOP,7,7,
+                    425,239
+END
+
+IDD_FSRAID_DIALOG DIALOGEX 0, 0, 365, 244
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "FSRaid"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Load",IDC_LOAD_BUTTON,7,176,44,12
+    PUSHBUTTON      "Create",IDC_CREATE_BUTTON,7,192,44,12
+    PUSHBUTTON      "Check",IDC_CHECK_BUTTON,53,176,44,12
+    PUSHBUTTON      "Check all",IDC_CHECKALL_BUTTON,53,192,44,12
+    PUSHBUTTON      "Fix names",IDC_FIXNAMES_BUTTON,99,176,44,12
+    PUSHBUTTON      "Repair",IDC_REPAIR_BUTTON,99,192,44,12
+    PUSHBUTTON      "Help",IDC_HELP_BUTTON,145,176,44,12
+    PUSHBUTTON      "About",IDC_ABOUT_BUTTON,145,192,44,12
+    PUSHBUTTON      "Download\nMonitor",IDC_MONITORDOWNLOAD_BUTTON,191,176,
+                    41,28,BS_MULTILINE
+    PUSHBUTTON      "Prefs",IDC_PREFS_BUTTON,318,176,40,12
+    DEFPUSHBUTTON   "Close",IDOK,318,192,40,12
+    CONTROL         "Pause",IDC_PAUSE_BUTTON,"Button",BS_AUTOCHECKBOX | 
+                    BS_PUSHLIKE | WS_TABSTOP,295,225,30,12
+    PUSHBUTTON      "Stop",IDC_STOP_BUTTON,328,225,30,12
+    RTEXT           "PAR file:",IDC_STATIC,7,7,29,12,SS_CENTERIMAGE
+    EDITTEXT        IDC_BASE_EDIT,39,7,319,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_TABSTOP
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",WS_BORDER,7,229,283,
+                    8
+    LTEXT           "Operation progression:",IDC_PROGRESS_TEXT,7,217,303,8
+    CONTROL         "",IDC_PROGRESS_SEPARATOR,"Static",SS_ETCHEDFRAME,7,214,
+                    351,1
+    CONTROL         "",IDC_DATAFILE_MAP,"Static",SS_ETCHEDFRAME | NOT 
+                    WS_VISIBLE,7,111,351,12
+    EDITTEXT        IDC_DATAFILE_MAP_TEXT,7,95,351,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    CONTROL         "",IDC_PARITYFILE_MAP,"Static",SS_ETCHEDFRAME | NOT 
+                    WS_VISIBLE,7,156,351,12
+    EDITTEXT        IDC_PARITYFILE_MAP_TEXT,7,140,351,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+    LTEXT           "Use this legend to identify the state of your data and parity files in the maps below. Hover your mouse over a maplet for information on a file or right-click for actions.",
+                    IDC_STATIC,13,43,192,26
+    LTEXT           "Parity files",IDC_STATIC,7,127,351,12,SS_CENTERIMAGE
+    EDITTEXT        IDC_STATUS_EDIT,39,22,319,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_TABSTOP
+    CONTROL         "",IDC_LEGEND_UNKNOWN,"Static",SS_BLACKFRAME,250,52,10,
+                    10
+    CONTROL         "",IDC_LEGEND_VALID,"Static",SS_BLACKFRAME,250,41,10,10
+    CONTROL         "",IDC_LEGEND_CORRUPT,"Static",SS_BLACKFRAME,305,41,10,
+                    10
+    CONTROL         "",IDC_LEGEND_MISSING,"Static",SS_BLACKFRAME,250,64,10,
+                    10
+    CONTROL         "",IDC_LEGEND_MISNAMED,"Static",SS_BLACKFRAME,305,64,10,
+                    10
+    CONTROL         "",IDC_LEGEND_ERROR,"Static",SS_BLACKFRAME,305,52,10,10
+    LTEXT           "Unknown",IDC_UNKNOWN_LEGEND_TEXT,264,52,37,10,
+                    SS_CENTERIMAGE
+    LTEXT           "Valid",IDC_VALID_LEGEND_TEXT,264,41,37,10,
+                    SS_CENTERIMAGE
+    LTEXT           "Corrupt",IDC_CORRUPT_LEGEND_TEXT,319,41,37,10,
+                    SS_CENTERIMAGE
+    LTEXT           "Missing",IDC_MISSING_LEGEND_TEXT,264,64,37,10,
+                    SS_CENTERIMAGE
+    LTEXT           "Misnamed",IDC_MISNAMED_LEGEND_TEXT,319,64,37,10,
+                    SS_CENTERIMAGE
+    LTEXT           "Error",IDC_ERROR_LEGEND_TEXT,319,52,37,10,
+                    SS_CENTERIMAGE
+    LTEXT           "Data files",IDC_STATIC,7,81,351,12,SS_CENTERIMAGE
+    RTEXT           "Status:",IDC_STATIC,7,22,29,12,SS_CENTERIMAGE
+    CONTROL         "",IDC_INFO_BORDER,"Static",SS_ETCHEDFRAME,7,36,351,41
+END
+
+IDD_HELP DIALOGEX 0, 0, 510, 336
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_THICKFRAME
+CAPTION "Help"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Close",IDOK,453,317,50,12
+    CONTROL         "",IDC_HELP_BROWSER,
+                    "{8856F961-340A-11D0-A96B-00C04FD705A2}",WS_TABSTOP,7,7,
+                    496,302
+END
+
+IDD_PREFERENCES_DIALOG DIALOGEX 0, 0, 381, 201
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "FSRaid preferences"
+FONT 8, "Tahoma", 400, 0, 0x0
+BEGIN
+    CONTROL         "Automatically fix names after a check",
+                    IDC_FIXAFTERCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
+                    14,29,135,10
+    CONTROL         "Automatically fix names before a repair",
+                    IDC_FIXBEFOREREPAIR,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,42,141,10
+    CONTROL         "Load archives after creation",IDC_LOADAFTERCREATE,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,55,106,10
+    CONTROL         "Remember archive states",IDC_REMEMBERSTATE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,68,95,10
+    PUSHBUTTON      "Flush states",IDC_FLUSH_SATES,117,67,63,12
+    CONTROL         "Disable overlapping I/O (slower)",IDC_NOOVERLAPPINGIO,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,82,119,10
+    CONTROL         "Use high contrast color scheme for maps",
+                    IDC_HIGHCONTRASTCOLORS,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,14,95,145,10
+    CONTROL         "",IDC_DOWNLOADMONITORINTERVAL,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,35,156,153,21
+    CONTROL         "Automatically check the set",IDC_CHECKONLOAD,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,201,31,103,10
+    CONTROL         "Automatically repair the set (includes check)",
+                    IDC_REPAIRAFTERLOAD,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,201,44,158,10
+    CONTROL         "",IDC_MEMORYPERCENT,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,221,92,153,21
+    CONTROL         "Associate with PAR files",IDC_ASSOCIATEPAR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,201,154,91,10
+    CONTROL         "Associate with SFV files",IDC_ASSOCIATESFV,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,201,165,92,10
+    DEFPUSHBUTTON   "OK",IDOK,138,182,50,12
+    PUSHBUTTON      "Cancel",IDCANCEL,194,182,50,12
+    CTEXT           "Do the following after loading a parity set",IDC_STATIC,
+                    194,7,180,18,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
+                    WS_EX_CLIENTEDGE
+    CTEXT           "File Associations",IDC_STATIC,194,130,180,18,
+                    SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
+    CTEXT           "General",IDC_STATIC,7,7,180,18,SS_CENTERIMAGE,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
+    CTEXT           "Memory Consumption (% of total physical RAM)",
+                    IDC_STATIC,194,60,180,18,SS_CENTERIMAGE,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
+    CTEXT           "50%",IDC_MEMORYTEXT,194,92,26,21,SS_CENTERIMAGE
+    LTEXT           "5%",IDC_STATIC,225,82,12,8
+    LTEXT           "50%",IDC_STATIC,292,82,16,8
+    LTEXT           "100%",IDC_STATIC,353,82,20,8
+    CTEXT           "Static",IDC_MEMVALUE_TEXT,194,114,180,8
+    CTEXT           "Download Monitor Check Interval (seconds)",IDC_STATIC,7,
+                    124,180,18,SS_CENTERIMAGE,WS_EX_DLGMODALFRAME | 
+                    WS_EX_CLIENTEDGE
+    CTEXT           "10s",IDC_DOWNLOADMONITORINTERVALTEXT,7,156,26,21,
+                    SS_CENTERIMAGE
+    LTEXT           "1s",IDC_STATIC,39,146,8,8
+    LTEXT           "60s",IDC_STATIC,173,146,12,8
+    CONTROL         "Save window position",IDC_SAVEWINDOWPOS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,14,108,85,10
+END
+
+IDD_CREATEPAR_DIALOG DIALOGEX 0, 0, 366, 332
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Create parity archive"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LISTBOX         IDC_FILE_LIST,7,42,352,92,LBS_SORT | LBS_USETABSTOPS | 
+                    LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | 
+                    WS_HSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Add files...",IDC_ADD_BUTTON,7,138,76,12
+    PUSHBUTTON      "Remove selected",IDC_REMOVE_BUTTON,7,153,76,12
+    PUSHBUTTON      "Set recoverable",IDC_SETRECOVERABLE_BUTTON,144,138,76,
+                    12
+    PUSHBUTTON      "Set non-recoverable",IDC_SETNONRECOVERABLE_BUTTON,144,
+                    153,76,12
+    PUSHBUTTON      "Clear list",IDC_CLEARLIST_BUTTON,283,153,76,12
+    CONTROL         "",IDC_RECOVERY_SLIDER,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_TOP | WS_TABSTOP,27,216,311,23,WS_EX_CLIENTEDGE
+    EDITTEXT        IDC_BASENAME_EDIT,107,275,231,12,ES_AUTOHSCROLL
+    EDITTEXT        IDC_OUTPUTDIR_EDIT,107,291,231,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_OUTPUTDIRBROWSE_BUTTON,342,291,17,12
+    DEFPUSHBUTTON   "Create",IDOK,254,313,50,12
+    PUSHBUTTON      "Cancel",IDCANCEL,309,313,50,12
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,7,7,352,32
+    LTEXT           "Files preceeded with [R] will be recoverable.\nFiles preceeded with [N] will not (this is useful for README files, NFO files, etc.)",
+                    IDC_STATIC,14,14,338,18
+    RTEXT           "Base filename for parity set",IDC_STATIC,7,275,95,12,
+                    SS_CENTERIMAGE
+    RTEXT           "Output directory",IDC_STATIC,7,291,95,12,SS_CENTERIMAGE
+    CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDFRAME,7,176,352,88,
+                    WS_EX_DLGMODALFRAME | WS_EX_CLIENTEDGE
+    LTEXT           "0%",IDC_STATIC,34,206,15,10,SS_CENTERIMAGE
+    RTEXT           "100%",IDC_STATIC,317,206,22,10,SS_CENTERIMAGE
+    LTEXT           "Use the recovery ratio to determine how many parity volumes to create. A 50% ratio will allow for as many as 50% of the data files to be recovered -- A good default is 10%",
+                    IDC_STATIC,17,184,333,17
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME,14,182,338,20
+    RTEXT           "Static",IDC_VOLUMECOUNT_STATIC,27,247,311,8
+    EDITTEXT        IDC_FILECOUNT_EDIT,283,138,76,12,ES_AUTOHSCROLL | 
+                    ES_READONLY
+END
+
+IDD_RENAME_DIALOG DIALOGEX 0, 0, 248, 186
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION
+CAPTION "Rename confirmation"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "Rename",IDOK,138,165,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,191,165,50,14
+    LTEXT           "There were files found with the wrong names. These files can be renamed to help complete your set of data files:",
+                    IDC_STATIC,7,7,234,18
+    CONTROL         "",IDC_RENAME_LIST,"SysListView32",LVS_REPORT | 
+                    LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,26,234,135
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 2,9,0,0
+ PRODUCTVERSION 2,9,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904e4"
+        BEGIN
+            VALUE "Comments", "HTTP://www.FluidStudios.com/"
+            VALUE "CompanyName", "Fluid Studios"
+            VALUE "FileDescription", "FSRaid"
+            VALUE "FileVersion", "2.8.0"
+            VALUE "InternalName", "FSRaid"
+            VALUE "LegalCopyright", "Copyright (c) 2003, Fluid Studios & Paul Nettle.  All rights reserved."
+            VALUE "OriginalFilename", "FSRaid.exe"
+            VALUE "ProductName", "FSRaid"
+            VALUE "ProductVersion", "2.8.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 432
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 263
+    END
+
+    IDD_FSRAID_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 358
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 237
+    END
+
+    IDD_HELP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 503
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 329
+    END
+
+    IDD_PREFERENCES_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 374
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 194
+    END
+
+    IDD_CREATEPAR_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 359
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 325
+    END
+
+    IDD_RENAME_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 241
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 179
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+IDR_MANIFEST            RT_MANIFEST             "res\\FSRaid.manifest"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// HTML
+//
+
+IDR_ABOUT_PAGE          HTML                    "res\\about.html"
+IDR_HELP_PAGE           HTML                    "res\\help.html"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Data
+//
+
+IDR_RT_HELP1            Rcdata                  "res\\help1.gif"
+IDR_RT_COMPANYLOGO      Rcdata                  "res\\logo.jpg"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_ABOUTBOX DLGINIT
+BEGIN
+    IDC_ABOUT_BROWSER, 0x376, 160, 0
+0x0000, 0x0000, 0x004c, 0x0000, 0x41f0, 0x0000, 0x281a, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x004c, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 
+0x0000, 0xd0e0, 0x0057, 0x3573, 0x11cf, 0x69ae, 0x0008, 0x2e2b, 0x6212, 
+0x0008, 0x0000, 0x0000, 0x0000, 0x004c, 0x0000, 0x1401, 0x0002, 0x0000, 
+0x0000, 0x00c0, 0x0000, 0x0000, 0x4600, 0x0080, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    0
+END
+
+IDD_HELP DLGINIT
+BEGIN
+    IDC_HELP_BROWSER, 0x376, 160, 0
+0x0000, 0x0000, 0x004c, 0x0000, 0x4ce5, 0x0000, 0x32bf, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x004c, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 
+0x0000, 0xd0e0, 0x0057, 0x3573, 0x11cf, 0x69ae, 0x0008, 0x2e2b, 0x6212, 
+0x0008, 0x0000, 0x0000, 0x0000, 0x004c, 0x0000, 0x1401, 0x0002, 0x0000, 
+0x0000, 0x00c0, 0x0000, 0x0000, 0x4600, 0x0080, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001, 0x0000, 
+0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDS_ABOUTBOX            "&About FSRaid..."
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+#include "res\FSRaid.rc2"  // non-Microsoft Visual C++ edited resources
+#include "afxres.rc"         // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

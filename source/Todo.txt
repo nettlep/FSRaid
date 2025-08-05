@@ -1,0 +1,39 @@
+
+Done (2.9.0)
+------------
+
+Version number chagned to 2.9.0
+Download monitor will now handle larger download sets (over 4GB)
+
+Todo
+----
+
+Can't repair files with UNC filenames
+Add percentage and par filename to titlebar
+
+Wish list
+---------
+
+Try to detect situations where a file might be too large, and see if it's valid if trimmed. If so, trim it without requiring a PAR file. (testing by: "Prof NO" <profno@hotpop.com>)
+Configurable sounds
+Button to delete all corrupt files (part of the list, whenever that gets put in)
+Command-line parameters for batch file processing
+List view/map view toggle (with status filtering)
+Right-click context menu in explorer to create par file (requires shell extension DLL)
+SFV file support
+Try to repair RAR files using winrar's repair functionality
+Auto-launch winrar
+
+Testers
+-------
+
+timdoc69@hotmail.com, mkhopper@lemursounds.com, TheMaster@wi.rr.com, dave.warren@devilsplayground.net, disjointedbouquets@attbi.com, steve@katech.com, dave.warren@devilsplayground.net
+
+
+Notification to
+---------------
+
+parchive-clients-news@lists.sourceforge.net
+
+
+

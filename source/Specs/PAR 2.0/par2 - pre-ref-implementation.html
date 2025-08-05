@@ -1,0 +1,1102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE></TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 1.0  (Win32)">
+	<META NAME="CREATED" CONTENT="20020905;17064551">
+	<META NAME="CHANGED" CONTENT="20020913;10475371">
+</HEAD>
+<BODY LANG="en-US">
+<H1>Parity Volume Set Spec. 2.0 [2002-9-12] (pre- reference
+implementation version)</H1>
+<P>Written by Michael Nahas, includes ideas by Peter B. Clements,
+Paul Nettle, and Ryan Gallagher.</P>
+<P>Based on &ldquo;Parity Volume Set Specification 1.0 [2001-10-14]&rdquo;
+by Stefan Wehlus and others.</P>
+<HR>
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Introduction</FONT></FONT></P>
+<P>This document describes a file format for storing redundant data
+for a set of files. 
+</P>
+<P>In operation, a user will select a set of files from which the
+redundant data is to be made. These are known as &ldquo;input files&rdquo;
+and the set of them is known as the &ldquo;recovery set&rdquo;. The
+user will provide these to a program which generates file(s) that
+match the specification in this document. The program is known as a
+&ldquo;PAR 2.0 Client&rdquo; or &ldquo;client&rdquo; for short, and
+the generated files are known as &ldquo;PAR 2.0 files&rdquo; or &ldquo;PAR
+files&rdquo;. If the files in the recovery set ever get damaged (e.g.
+when they are transmitted or stored on a faulty disk) the client can
+read the damaged input files, read the (possibly damaged) PAR files,
+and regenerate the original input files. Of course, not all damages
+can be repaired, but many can.</P>
+<P>A user can also name some input files that are not to be recovered
+if damaged. These input files are known as the &ldquo;non-recovery
+set&rdquo;. This feature is in the spec to keep the same
+functionality as PAR 1.0. 
+</P>
+<P>The redundant data in the PAR files is computed using Reed-Solomon
+codes. These codes can take a set of equal-sized blocks of data and
+produce a number of same-sized recovery blocks. Then, given a subset
+of original data blocks and some recovery block, it is possible to
+reproduce the original data blocks. Reed-Solomon codes can do this
+recovery as long as the number of missing data blocks does not out
+number the recovery blocks. The design of the Reed-Solomon codes in
+this spec is based on James S. Plank's tech report at U. of Tennessee
+entitled &ldquo;A tutorial on Reed-Solomon coding for fault-tolerance
+in RAID-like systems&rdquo;. The paper contains an error, so the
+design is changed slightly to fix the problem. PAR 2.0 uses a 16-bit
+Reed-Solomon code and can support 32768 blocks.</P>
+<P>The equal-sized blocks for the Reed-Solomon codes come from
+&ldquo;slices&rdquo; of the input files in the recovery set. The
+slices are consecutive equal-sized chunks of each file. If a file
+does not fill out the chunk, i.e. &ldquo;it ends mid-slice&rdquo;,
+the rest of the slice is treated as if it is padded with zero bytes. 
+</P>
+<P><BR><BR>
+</P>
+<P>The PAR 2.0 file itself is made of &ldquo;packets&rdquo; -
+self-contained parts with their own checksum. This design prevents
+damage to one part of the file from making the whole file unusable.</P>
+<P>Packets have a type and each type of packet serves a different
+purpose. One describes a file. Another contains the checksums of the
+slices in a file. Another states which files are in the recovery set
+and which files are in the non-recovery set. And yet another contains
+a &ldquo;recovery slice&rdquo; - the recovery data produced by the
+Reed-Solomon code.</P>
+<P>A PAR 2.0 file is only required to contain 1 specific packet &ndash;
+the packet that identifies the type of client that created the file.
+This way, if clients are creating files that don't match the
+specification in some way, they can be tracked down.</P>
+<P>The packets for a recovery set and non-recovery set can be broken
+into multiple files. Files can contain duplicate packets &ndash; in
+fact, this is recommended for vital packets, such as the ones that
+describe the input files and the one that states which files are in
+the recovery set. Packets can appear in any order in a file.</P>
+<P><BR><BR>
+</P>
+<HR>
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Conventions</FONT></FONT></P>
+<P>There are a number of conventions used in the design of this
+specification. 
+</P>
+<P>The data is 4-byte aligned. That is, every field starts on an
+index in the file which is congruent to zero, modulus 4. (I.e.,
+address % 4 == 0) This is because some memory systems function faster
+if 32-bit quantities are 4-byte aligned. It should be noted that a
+file could be corrupted (bytes inserted or deleted) to throw off the
+alignment. The spec is designed so that future versions could be
+8-byte aligned.</P>
+<P>All integers in this version of the spec are unsigned integers of
+either 4 or 8 bytes in length.</P>
+<P>Strings are not null-terminated. This is to prevent hackers from
+using stack-overflow attacks. In order to make a string 4-byte
+aligned, 1 to 3 zero bytes may be appended. (2 bytes in the case of
+Unicode strings.) If an N-byte field contains an array, a
+null-terminated string can be created by copying the N-byte field
+into a character array of length N+1 and then the setting the N+1
+character to '\0'. 
+</P>
+<P>The lengths of arrays and strings are often implicit. For example,
+if a region is known to be 32 bytes and that region contains an
+8-byte integer and a string, then the string is known to take up 24
+bytes. The string is then at least 21 bytes in length, since the 24
+bytes contains 0 to 3 bytes of null padding at the end. 
+</P>
+<P>All strings in the &ldquo;core&rdquo; spec are ASCII. This was
+chosen because Unicode is not sufficiently supported by tools. There
+exist optional portions of the spec that do support Unicode strings.</P>
+<P>The lengths of files and parts of files are determined by 8-byte
+integers. This is to support OSes that can handle files longer than
+4GB.</P>
+<P>All integers are Intel-endian. (That is, little endian.) 
+</P>
+<P>The recovery set (and non-recovery set, if present) is identified
+by a 16-byte value known as the Recovery Set ID. Every part of the
+PAR file that affects a recovery set contains the recovery set ID. 
+In this 2.0 version, the Recovery  Set ID is calculated as an MD5
+Hash of certain values.  The way of calculating this value could
+change in future versions. 
+</P>
+<P>Files are also identified by a 16-byte value.  In this 2.0
+Version, it is an MD5 Hash of their name, length and the MD5 Hash of
+their first 16kB.   The way of calculating this value could change in
+future versions. 
+</P>
+<P>Every byte of a PAR file is specified. There are no places to
+throw &ldquo;junk bytes&rdquo; that can be any value. Padding, where
+needed, is specified to be zero bytes. The order of items in all
+arrays is specified.</P>
+<P>The specification is designed so that if two clients generate a
+packet with the same parameters, the packets are identical (except
+for client-identifying or client-specific packets). Thus, client
+writers can compare the output of their program against the reference
+implementation by comparing packets byte-for-byte.</P>
+<HR>
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT SIZE=4><FONT FACE="Albany, sans-serif">Description</FONT></FONT></P>
+<P>A PAR 2.0 file consists of a sequence of &ldquo;packets&rdquo;. A
+packet has a fixed sized header and a variable length body. The
+packet header contains a checksum for the packet &ndash; if the
+packet is damaged, the packet is ignored. The packet header also
+contains a packet-type. If the client does not understand the packet
+type, the packet is ignored. To be compliant with this specification,
+a client must understand the &ldquo;core&rdquo; set of packets.
+Client may process the optional packets or create their own
+application-specific packets. 
+</P>
+<P>The packet header is:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="8" SDNUM="1033;">
+				<P ALIGN=CENTER>8</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>byte[8]</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Magic sequence. Used to quickly identify location
+				of packets. Value = {'P', 'A', 'R', '2', '\0', 'P', 'K', 'T'}
+				(ASCII) 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="8" SDNUM="1033;">
+				<P ALIGN=CENTER>8</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>8-byte uint</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Length of the entire packet. Must be multiple of 4.
+				(NB: Includes length of header.)</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>MD5 Hash of packet. Used as a checksum for the
+				packet. Calculation starts at first byte of Recovery Set ID and
+				ends at last byte of body. <I>Does not include the magic
+				sequence, length field or this field. NB: The MD5 Hash, by its
+				definition, includes the length as if it were appended to the
+				packet.</I></P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Recovery Set ID. All packets that belong together
+				have the same recovery set ID. (See &ldquo;main packet&rdquo; for
+				how it is calculated.)</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>byte[16]</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Type. Can be anything. All beginning &ldquo;PAR &ldquo;
+				(ASCII) are reserved for specification-defined packets.
+				Application-specific packets are recommended to begin with the
+				ASCII name of the client.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>?</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Body of Packet. Must be a multiple of 4 bytes. 
+				</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P>There are various types of packets. The &ldquo;core&rdquo; set of
+packets &ndash; the set of packets that all clients must recognize
+and process &ndash; are listed next. For each, the value for the
+&ldquo;type&rdquo; field will be listed along with the contents of
+the body of the packet.</P>
+<P><BR><BR>
+</P>
+<P><B>Main packet</B></P>
+<P>The main packet contains the slice size and the File IDs of all
+the files in the recovery set. The MD5 hash of the <I>body</I> of the
+main packet is used as the Recovery Set ID, which is included in the
+packet header of every packet for the set.  Clients reading a file
+should just test that the Recovery Set ID is the same in all packets
+and not check that it was calculated to the right value; the method
+for calculating the Recovery Set ID could change in future versions.</P>
+<P>The main packet has a type value of &ldquo;PAR 2.0\0Main\0\0\0\0&rdquo;
+(ASCII). The packet's body contains the following: 
+</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="8" SDNUM="1033;">
+				<P ALIGN=CENTER>8</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>8-byte uint</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Slice size. Must be a multiple of 4. 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER>4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>4-byte uint</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Number of files in the recovery set. 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>File IDs of all files in the recovery set. (See
+				File Description packet.) These hashes are <I>sorted</I> by
+				numerical value (treating them as 16-byte unsigned integers). 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>File IDs of all files in the non-recovery set. (See
+				File Description packet.) These hashes are <I>sorted</I> by
+				numerical value (treating them as 16-byte unsigned integers). 
+				</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>File Description packet</B></P>
+<P STYLE="font-weight: medium">A file description packet is included
+for each input file &ndash; recoverable or non-recoverable. The first
+thing in the packet is the File ID &ndash; this uniquely identifies a
+file in the PAR file. The packet then contains the MD5 hash, MD5 hash
+of the first 16kB of the file, file length, and the name of the file.
+The MD5 hash of the first 16kB of the file is included so that a
+client can identify a file if its name has been changed without the
+client reading the entire file. (Of course, it assumes the first 16kB
+hasn't been damaged or lost!) 
+</P>
+<P STYLE="font-weight: medium">The File ID in this version is
+calculated as the MD5 Hash of the last 3 fields of the body of this
+packet: MD5-16k, length, and ASCII file name.   Note: The length and
+MD5-16k are included because the Recovery Set ID is a hash of the
+File IDs and the Recovery Set ID should be a function of file
+contents as well as names 
+</P>
+<P STYLE="font-weight: medium">The file description packer has a type
+value of &ldquo;PAR 2.0\0FileDesc&rdquo; (ASCII). The packet's body
+contains the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The File ID. 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The MD5 hash of the entire file.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The MD5-16k. That is, the MD5 hash of the first
+				16kB of the file.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="8" SDNUM="1033;">
+				<P ALIGN=CENTER>8</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>8-byte uint</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Length of the file.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*8</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>ASCII char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Name of the file. <I>This array is not guaranteed
+				to be null terminated!</I> Subdirectories are indicated by an
+				HTML-style '/' (a.k.a. the UNIX slash). <I>The filename must be
+				unique.</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>Input File Slice Checksum packet</B></P>
+<P><SPAN STYLE="font-weight: medium">This packet type contains
+checksums for all the slices that are in an input file. It includes a
+CRC32 checksum to quickly locate the slices and an MD5 checksum to
+verify they have not been modified. If the file would end mid-slice,
+the remainder of the slice is filled with 0-value bytes.</SPAN></P>
+<P STYLE="font-weight: medium">The input file slice checksum packet
+has a type value of &ldquo;PAR 2.0\0IFSC\0\0\0\0&rdquo; (ASCII). The
+packet's body contains the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>The File ID of the file.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*20</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>{MD5 Hash, CRC32} array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>MD5 Hash and CRC32 pairs for the slices of the
+				file. The Hash/CRC pairs are in the same order as their
+				respective slices in the file. The Hash comes before the CRC in
+				the array elements.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>Recovery Slice packet</B></P>
+<P STYLE="font-weight: medium">The recovery slice packet contains one
+slice of recovery data. The recovery data is generated using a 16-bit
+Galois Field (GF) with generator 0x0001100B.</P>
+<P>The algorithm for computing recovery slices is based on James S.
+Plank's tech report at U. of Tennessee entitled &ldquo;A tutorial on
+Reed-Solomon coding for fault-tolerance in RAID-like systems&rdquo;.
+The input slices are ordered and assigned 16-bit constants. Recovery
+slices are assigned 16-bit exponents. Each 2-byte word of the
+recovery slice is the sum of the contributions from each input slice.
+The contribution of each input slice is the 2-byte word of the input
+slice multiplied by the input slice's constant raised to the recovery
+slice's exponent. All these computations (adds, multiplys, powers)
+are done using the 16-bit Galois Field operations.</P>
+<P STYLE="font-weight: medium">To generate the recovery data, the
+slices of the input files are assigned constants. This is based on
+the order the File IDs appear in the main packet and then by the
+order the slices appear in the file. So the first slice of the first
+file in the main packet is assigned the first constant. The second
+slice of the first file is assigned the second constant. And so on.
+If the last slice of the first file has the Nth constant, the first
+slice of the second file is assigned the (N+1)th. And so on. 
+</P>
+<P STYLE="font-weight: medium">Here, the PAR 2.0 Spec diverges from
+Plank's paper. In Plank, the first constant is 1, the second 2, the
+third 3, etc. This is a bad approach because some constants have an
+order less than 65535. (That is, there exists constants N where N
+raised to a power less than 65535 is equal to 1 in the Galois Field.)
+ These constants can prevent recovery matrices from being invertible
+and can, therefore, stop recovery. This spec does not use those
+constants. So, the first constant is the first power of two that has
+order 65535. The second constant is the next power of two that has
+order 65535. And so on. A power of two has order 65535 if the
+exponent is not equal to 0 modulus 3, 5, 17, or 257. In C code, that
+would be (n%3 != 0 &amp;&amp; n%5 != 0 &amp;&amp; n%17 != 0 &amp;&amp;
+n%257 != 0). Note &ndash; this is the <I>exponent</I> being tested,
+and not the constant itself. There are 32768 valid constants. The
+first few are:</P>
+<P>2, 4, 16, 128, 256, 2048, 8192, 16384, 4107, 32856, 17132, ...</P>
+<P STYLE="font-weight: medium">The recovery slice packet has a type
+value of &ldquo;PAR 2.0\0RecvSlic&rdquo; (ASCII). The packet's body
+contains the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER>4</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>4-byte uint</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>Exponent used to generate recovery data</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>byte array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>Recovery data.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>Creator packet</B></P>
+<P STYLE="font-weight: medium">This packet is used to identify the
+client that created the file. It is <I>required</I> to be in every
+PAR file. If a client is unable to process a recovery set, the
+contents of the creator packet <I>must </I>be shown to the user. The
+goal of this is that any client incompatibilities can be found and
+resolved quickly. 
+</P>
+<P STYLE="font-style: normal; font-weight: medium">The creator packet
+has a type value of &ldquo;PAR 2.0\0Creator\0&rdquo; (ASCII). The
+packet's body contains the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>ASCII char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>ASCII text identifying the client. This should also
+				include a way to contact the client's creator &ndash; either
+				through a URL or an email address. NB: <I>This is not a null
+				terminated string!</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P STYLE="font-weight: medium">Here ends the &ldquo;core&rdquo;
+packets that all clients must recognize and process.</P>
+<P><BR><BR>
+</P>
+<HR>
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Conclusion</FONT></FONT></P>
+<P>That is the official spec. To make sure clients work similarly,
+the following client conventions should be followed. 
+</P>
+<P>PAR 2.0 files should always end in &ldquo;.par2&rdquo;. If a file
+contains recovery slices, the &ldquo;.par2&rdquo; should be preceded
+by &ldquo;.volXX-YY&rdquo; where XX to YY is the range of exponents
+for slices. For example, &ldquo;file.vol20-29.par2&rdquo;. More than
+2 digits should be used if necessary.  Any exponents that contain
+fewer digits than the largest exponent should be preceded by zeros so
+that all filenames have the same length.  For example,
+&ldquo;file.vol075-149.par2&rdquo;.  Exponents should start at 0 and
+go upwards.</P>
+<P>If multiple PAR files are generated, they may either have a
+constant number of slices per file (e.g. 20, 20, 20, ...) or
+exponentially increasing number of slices (e.g., 1, 2, 4, 8, ...).
+Note that to store 1023 slices takes 52 files if each has 20 slices,
+but takes only 10 files with the exponential pattern. 
+</P>
+<P>When generating multiple PAR files, it is expected that one file
+be generated without any slices and containing all main, file
+description, and input file checksum packets. The other files should
+also include the main, file description and input file checksum
+packets. This repeats data that cannot be recovered. 
+</P>
+<P><I>NOTE: If the files are to be transmitted over usenet, it might
+be best to place the main, file description and input file checksum
+packets at the end, so that the equal-sized recovery slice packets
+are at the beginning. That way it may be possible to put a single
+recovery slice in each usenet message.</I></P>
+<P>If just a single PAR file is generated, it is expected that the
+main, file description, and input file checksum packets are repeated
+multiple times and scattered through out the file. (Once again,
+repeating data that cannot be recovered.)</P>
+<P>Recall that all files <I>must</I> contain a creator packet.</P>
+<P>It is recommended that users are warned when they create PAR files
+with names that are incompatible with Windows, Mac, or Linux systems.
+That is, file or directory names that are more than 255 characters
+long, start with a period (.) or a dash (-), or contain one of these
+characters: &lt; &gt; : &rdquo; ' ` ? * &amp; | [ ] \ ; or newline
+(\n).</P>
+<P>It is <I>strongly</I> recommended that clients query a user before
+writing to a file whose File Description packet contains an absolute
+pathname. For Windows, that means one starting with &ldquo;C:\&rdquo;
+or &ldquo;//&rdquo; for example. For UNIX, that means one starting
+with &ldquo;/&rdquo; or &ldquo;//&rdquo;. For Mac, that means one
+starting with &ldquo;:&rdquo;. This is to prevent PAR files of
+unknown origin from cracking a system by overwriting system files. 
+</P>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<HR>
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Appendix
+A &ndash; Optional PAR 2.0 Packets</FONT></FONT></P>
+<P>Clients do not need to process these packets. They are included in
+this spec because many clients might want to implement the
+functionality and, if they did, it would be good if they were
+compatible with each other.</P>
+<P><BR><BR>
+</P>
+<P><B>Unicode Filename packet</B></P>
+<P STYLE="font-weight: medium">This packet provides an alternate name
+for a file. This packet <I>overrides</I> the default &ldquo;ASCII&rdquo;
+name in the file description packet.</P>
+<P STYLE="font-weight: medium">The Unicode filename packet has a type
+value of &ldquo;PAR 2.0\0UniFileN&rdquo; (ASCII, ironically). The
+packet's body contains the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT STYLE="font-style: normal">The File ID of the file.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>Unicode char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The name of the file in Unicode. <I>NB: This is not
+				a null terminated array!</I>  This name must obey all the
+				restrictions of the ASCII filename in the File Description
+				packet.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>ASCII Comment packet</B></P>
+<P STYLE="font-weight: medium">The ASCII comment packet contains -
+would you believe it &ndash; a comment in ASCII text! This should be
+shown to the user. If multiple copies of the same comment are found,
+only one need be shown.</P>
+<P STYLE="font-weight: medium">The ASCII comment packet has a type
+value of &ldquo;PAR 2.0\0CommASCI&rdquo; (ASCII). The packet's body
+contains the following</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>ASCII char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The comment. NB: <I>This is not a null terminated
+				string!</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>Unicode Comment packet</B></P>
+<P STYLE="font-weight: medium">The Unicode comment packet contains a
+comment in Unicode text. This should be shown to the user. If
+multiple copies of the same comment are found, only one need be
+shown. If an analogous ASCII version of the same comment is included
+in the file, the ASCII comment should not be shown.</P>
+<P STYLE="font-weight: medium">The ASCII comment packet has a type
+value of &ldquo;PAR 2.0\0CommUni&rdquo; (ASCII, ironically). The
+packet's body contains the following</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12% SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>MD5 Hash or zeros</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT STYLE="font-style: normal">If an ASCII comment
+				packet exists in the file and is just a translation of the
+				Unicode in this comment, this is the MD5 Hash of the ASCII
+				comment packet. Otherwise, it is zeros.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>Unicode char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The comment. NB: <I>This is not a null terminated
+				string!</I></P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>Input File Slice packet</B></P>
+<P><SPAN STYLE="font-weight: medium">The input file slice packet is
+used if the user wants to include the input file inside the PAR file.
+This can be used to combine lots of small files into one file or to
+break a large file into smaller files (by distributing its slices
+into many PAR files). The length of the slice is determined by the
+slice size in the main packet, unless the slice would run off the end
+of the file. The packet contains an index for the slice and the slice
+contain bytes from (slice_size*index) to (slice_size*index +
+slice_size -1), unless the end of the file is reached. <I>NOTE: The
+indices are not the same as the input slice constants used in making
+recovery slices.</I></SPAN></P>
+<P STYLE="font-weight: medium">If files contain input slices, the
+&ldquo;.par2&rdquo; in the filename should be preceded by
+&ldquo;.partXX-YY&rdquo; where XX to YY is the range of constants for
+slices. For example, &ldquo;file.part00-09.par2&rdquo;.</P>
+<P STYLE="font-weight: medium">The input file slice packet has a type
+value of &ldquo;PAR 2.0\0FileSlic&rdquo;. The packet's body contains
+the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>The File ID of the file.</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="8" SDNUM="1033;">
+				<P ALIGN=CENTER>8</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>8-byte uint</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>The index of the slice in the file.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>byte array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The slice. If the file ends mid-slice, the field is
+				zero padded with 0 to 3 bytes to make it end on a 4-byte
+				alignment.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+<P><B>Recovery File Slice Checksum packet</B></P>
+<P STYLE="font-weight: medium">So far, we've had input and recovery
+slices in the PAR file and input slices in an external file (i.e.,
+the input file slice checksum packet). This packet covers the last
+combination &ndash; the recovery slices are in an external file
+(i.e., one where they don't have packet headers). This packet type
+may never be used, but it is included for completeness.</P>
+<P STYLE="font-weight: medium">There exists a file description packet
+for the file. The slices are generated the same as for the recovery
+slice packet.</P>
+<P STYLE="margin-bottom: 0cm">The recovery file slice checksum packet
+has a type value of &ldquo;PAR 2.0\0RFSC\0\0\0\0&rdquo;. The packet's
+body contains the following:</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>The File ID of the file. 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*24</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>{MD5 Hash, CRC32, 4-byte uint} array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>MD5 Hash, CRC32, and exponent triplets for the
+				slices in the file. The Hash/CRC/exponent triplets are in the
+				same order as their respective slices in the file. The order in
+				the array element is MD5 Hash, CRC32, followed by exponent.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P STYLE="font-weight: medium">This ends the optional packets in this
+specification.</P>
+<P><BR><BR>
+</P>
+<HR>
+<P STYLE="margin-top: 0.42cm; page-break-after: avoid"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Appendix
+B &ndash; How to Add an Application-Specific Packet Type</FONT></FONT></P>
+<P>Say the author of &ldquo;NewsPost&rdquo; wanted to add his own
+packet type &ndash; one that identified the names of the Usenet
+messages in which the files are posted. That author can create his
+own packet type. For example, here is the layout for one where the
+Usenet messages are identified by a newsgroup and a regular
+expression which all matches the names of the usenet articles.</P>
+<P>The packet has a type value of &ldquo;NewsPostUsenet\0\0&rdquo;.
+(NB: Including the name of the client in the type is the recommended
+way to ensure unique type names.) The packet's body contains the
+following: 
+</P>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=30*>
+	<COL WIDTH=29*>
+	<COL WIDTH=197*>
+	<THEAD>
+		<TR VALIGN=TOP>
+			<TH WIDTH=12%>
+				<P>Length (bytes)</P>
+			</TH>
+			<TH WIDTH=11%>
+				<P>Type</P>
+			</TH>
+			<TH WIDTH=77%>
+				<P ALIGN=LEFT>Description</P>
+			</TH>
+		</TR>
+	</THEAD>
+	<TBODY>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="16" SDNUM="1033;">
+				<P ALIGN=CENTER>16</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>MD5 Hash</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>The File ID of the file. 
+				</P>
+			</TD>
+		</TR>
+		<TR>
+			<TD WIDTH=12% VALIGN=BOTTOM SDVAL="4" SDNUM="1033;">
+				<P ALIGN=CENTER>4</P>
+			</TD>
+			<TD WIDTH=11% VALIGN=TOP>
+				<P ALIGN=CENTER>4-byte uint</P>
+			</TD>
+			<TD WIDTH=77% VALIGN=TOP>
+				<P ALIGN=LEFT>The length of the string containing the name of the
+				newsgroup. Must be a multiple of 4.</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>ASCII char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>The name of the newsgroup. For example,
+				&ldquo;alt.binaries.multimedia&rdquo;. 
+				</P>
+			</TD>
+		</TR>
+		<TR VALIGN=TOP>
+			<TD WIDTH=12%>
+				<P ALIGN=CENTER>?*4</P>
+			</TD>
+			<TD WIDTH=11%>
+				<P ALIGN=CENTER>ASCII char array</P>
+			</TD>
+			<TD WIDTH=77%>
+				<P ALIGN=LEFT>A regular expression matching the name of articles
+				containing the file. For example, &ldquo;Unaired Pilot &ndash;
+				VCD,NTSC - (??/??)&rdquo;.</P>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<P><BR><BR>
+</P>
+<P><BR><BR>
+</P>
+</BODY>
+</HTML>
